@@ -51,7 +51,20 @@ TIM_HandleTypeDef htim4;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
+uint32_t dac_buffer[NS] = {0};
 
+uint32_t midi_to_cnt[] = {
+		40138,		37890,		35763,		33740,		31857,		30062,		28385,		26786,		25279,		23864,		22521,		21259,
+		20069,		18945,		17881,		16870,		15928,		15031,		14192,		13393,		12640,		11932,		11260,		10629,
+		10034,		9472,		8941,		8435,		7964,		7515,		7096,		6696,		6320,		5966,		5630,		5315,
+		5017,		4736,		4470,		4218,		3982,		3758,		3548,		3348,		3160,		2983,		2815,		2657,
+		2509,		2368,		2235,		2109,		1991,		1879,		1774,		1674,		1580,		1491,		1408,		1329,
+		1254,		1184,		1118,		1054,		996,		939,		887,		837,		790,		746,		704,		664,
+		627,		592,		559,		527,		498,		470,		444,		419,		395,		373,		352,		332,
+		314,		296,		279,		264,		249,		235,		222,		209,		197,		186,		176,		166,
+		157,		148,		140,		132,		124,		117,		111,		105,		99,		    93, 		88,		    83,
+		78,		    74,		    70,		    66,		    62,		    59,		    55,		    52,		    49,		    47,		    44,		    42
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -107,12 +120,19 @@ int main(void)
   MX_TIM4_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
+  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)dac_buffer, 128, DAC_ALIGN_12B_R);  //Start with Sin
+  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer, 128, DAC_ALIGN_12B_R);  //Start with Sin
+  HAL_TIM_Base_Start(&htim2);
+  HAL_TIM_Base_Start(&htim4);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  //HAL_NVIC_EnableIRQ(SysTick_IRQn);
+  //Copy original buffer to DAC_Buffer
+  for (int i = 0; i < NS; i++) {
+	  dac_buffer[i] = Wave_LUT[0][i];
+  }
   while (1)
   {
       // LED ON
