@@ -29,7 +29,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx.h"
 #include "stm32f4xx_hal.h"
-#include "usbd_def.h"
+#include "../../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h" //Wait what? For real? :X WTF is wrong with you CubeMX.
 
 /* USER CODE BEGIN INCLUDE */
 
