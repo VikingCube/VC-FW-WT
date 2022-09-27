@@ -21,8 +21,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "adsr.h"
-#include "defines.h"
 
 /* USER CODE END Includes */
 
@@ -55,18 +53,7 @@ TIM_HandleTypeDef htim7;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
-uint32_t dac_buffer[2][NS] = {0};
-uint32_t adc[12];
 
-//Calculated to actual NS from google sheet
-uint32_t midi_to_cnt[] = { 40138,37890,35763,33740,31857,30062,28385,26786,25279,23864,22521,21259,
-		20069,18945,17881,16870,15928,15031,14192,13393,12640,11932,11260,10629,
-		10034,9472,8941,8435,7964,7515,7096,6696,6320,5966,5630,5315,5017,4736,4470,4218,3982,3758,3548,3348,3160,
-		2983,2815,2657,2509,2368,2235,2109,1991,1879,1774,1674,1580,1491,1408,1329,1254,1184,1118,1054,996,939,887,
-		837,790,746,704,664,627,592,559,527,498,470,444,419,395,373,352,332,314,296,279,264,249,235,222,209,197,186,
-		176,166,157,148,140,132,124,117,111,105,99,93,88,83,78,74,70,66,62,59,55,52,49,47,44,42,39,37,35,33,31,29,
-		28,26,25,23,22,21
-};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,48 +67,12 @@ static void MX_TIM4_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
-ADSR adsr[] = {ADSR(0),ADSR(1)}; //Will this call some copy constructor or so?
-uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as real C++
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void select_wave(uint32_t ch, uint32_t wave)
-{
-       for (int x = 0; x < NS; x++) {
-               dac_buffer[ch][x] = Wave_LUT[wave][x];
-    }
-}
 
-void wave_handler(uint32_t ch, GPIO_TypeDef *port, uint16_t pin)
-{
-	  if (!HAL_GPIO_ReadPin(port, pin)) { //TODO this would be much nicer from IT
-		  act[ch]++;
-		  if (act[ch] == NR_WAVES) act[ch] = 0;
-		  select_wave(ch, act[ch]);
-		  while (!HAL_GPIO_ReadPin(port, pin)) { } //Wait for the user to release the button
-	  }
-
-}
-
-void adsr_note_on(uint32_t ch)
-{
-	adsr[ch].note_on();
-}
-
-void adsr_note_off(uint32_t ch)
-{
-	adsr[ch].note_off();
-}
-
-void adsr_tick_it(TIM_HandleTypeDef* tim)
-{
-	//for(uint32_t i = 0; i < 2; i++) {
-	//	adsr[i].tick();
-	//}
-	adsr[0].tick();
-	adsr[1].tick();
-}
 /* USER CODE END 0 */
 
 /**
@@ -160,41 +111,14 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
-  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)dac_buffer[0], NS, DAC_ALIGN_12B_R);  //Start with Sin
-  HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer[1], NS, DAC_ALIGN_12B_R);  //Start with Sin
-  HAL_TIM_Base_Start(&htim2); //DAC Ch1
-  HAL_TIM_Base_Start(&htim4); //DAC Ch2
-  HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  select_wave(0,0);
-  select_wave(1,0);
-
-  //Start AD
-  HAL_ADC_Start_DMA(&hadc1, adc, 12);
-
   while (1)
   {
-	  HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
-      HAL_Delay(100);
-
-	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin);
-	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
-
-	  adsr[0].setA(float(adc[0]/10));
-	  adsr[0].setD(float(adc[1]/10));
-	  adsr[0].setS(float(adc[2])/4095*100);
-	  adsr[0].setR(float(adc[3]/10));
-
-	  adsr[1].setA(float(adc[4]/10));
-	  adsr[1].setD(float(adc[5]/10));
-	  adsr[1].setS(float(adc[6])/4095*100);
-	  adsr[1].setR(float(adc[7]/10));
-
-/* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -568,7 +492,7 @@ static void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-  HAL_TIM_RegisterCallback(&htim7, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it);
+
   /* USER CODE END TIM7_Init 2 */
 
 }
@@ -725,12 +649,6 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-	  // LED ON
-	  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
-	  HAL_Delay(100);
-	  // LED OFF
-	  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
-	  HAL_Delay(100);
   }
   /* USER CODE END Error_Handler_Debug */
 }

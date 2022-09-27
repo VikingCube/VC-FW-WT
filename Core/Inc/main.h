@@ -150,7 +150,7 @@ void Error_Handler(void);
 #define LED1_Pin GPIO_PIN_1
 #define LED1_GPIO_Port GPIOE
 /* USER CODE BEGIN Private defines */
-
+#define DAC_DATA_GPIO GPIOD
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
