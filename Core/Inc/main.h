@@ -53,7 +53,8 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void adsr_note_on(uint32_t ch);
+void adsr_note_off(uint32_t ch);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

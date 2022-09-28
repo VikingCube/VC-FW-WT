@@ -125,22 +125,19 @@ static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length) //TODO DEBUG This 
   uint8_t chan = buffer[1] & 0x0f;
   uint8_t msgtype = buffer[1] & 0xf0;
   uint8_t b1 =  buffer[2]; //Note ?
-  uint8_t b2 =  buffer[3]; //Velocity ?
+  uint8_t b2 =  buffer[3]; //Velocity ? --> TODO: Pass it to note on - calculate it into ADSR.
   //uint16_t b = ((b2 & 0x7f) << 7) | (b1 & 0x7f);
 
   //TODO how to give the date up to the user level?
-  //GPIOD->ODR ^= 0b0010000000000000;
 
   if (msgtype == 0x90) { //NOTE ON
 	  if (chan == 0x00) {
-	  		  //GPIOD->ODR |= 0b1000000000000000;
 	  		  htim2.Init.Period = midi_to_cnt[b1];
 	  		  if (HAL_TIM_Base_Init(&htim2) != HAL_OK) { Error_Handler(); }
 	  		  HAL_TIM_Base_Start(&htim2);
 	  		  adsr_note_on(0);
 	  }
 	  if (chan == 0x01) {
-		  //GPIOD->ODR |= 0b1000000000000000;
 		  htim4.Init.Period = midi_to_cnt[b1];
 		  if (HAL_TIM_Base_Init(&htim4) != HAL_OK) { Error_Handler(); }
 		  HAL_TIM_Base_Start(&htim4);
