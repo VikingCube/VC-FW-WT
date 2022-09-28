@@ -18,6 +18,9 @@
 #define DAC_AB_Pin GPIO_PIN_15
 #define DAC_AB_GPIO_Port GPIOC
 
+#define LED1_Pin GPIO_PIN_1
+#define LED1_GPIO_Port GPIOE //TODO Just for debug
+
 class ADSR {
 private:
 	uint32_t ch 	= 0;
