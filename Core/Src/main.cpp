@@ -78,7 +78,20 @@ static void MX_TIM2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
-ADSR adsr[] = {ADSR(0),ADSR(1)}; //Will this call some copy constructor or so?
+ADSR adsr[] = {
+				ADSR(0
+					,LED4_GPIO_Port ,LED4_Pin
+					,LED5_GPIO_Port ,LED5_Pin
+					,LED6_GPIO_Port ,LED6_Pin
+					,LED7_GPIO_Port ,LED7_Pin
+					)
+			   ,ADSR(1
+				    ,LED9_GPIO_Port  ,LED9_Pin
+					,LED10_GPIO_Port ,LED10_Pin
+					,LED11_GPIO_Port ,LED11_Pin
+					,LED12_GPIO_Port ,LED12_Pin
+				    )
+}; //Will this call some copy constructor or so?
 uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as real C++
 /* USER CODE END PFP */
 
@@ -184,12 +197,12 @@ int main(void)
 
 	  adsr[0].setA(float(adc[0]/10));
 	  adsr[0].setD(float(adc[1]/10));
-	  adsr[0].setS(float(adc[2])/4095*100);
+	  adsr[0].setS(float(adc[2])/4096*100);
 	  adsr[0].setR(float(adc[3]/10));
 
 	  adsr[1].setA(float(adc[4]/10));
 	  adsr[1].setD(float(adc[5]/10));
-	  adsr[1].setS(float(adc[6])/4095*100);
+	  adsr[1].setS(float(adc[6])/4096*100);
 	  adsr[1].setR(float(adc[7]/10));
 
 /* USER CODE END WHILE */
@@ -551,9 +564,9 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 1000;
+  htim7.Init.Prescaler = 250; //was 1000
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 1000;
+  htim7.Init.Period = 1000; //Was 1000
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {

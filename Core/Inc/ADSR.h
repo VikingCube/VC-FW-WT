@@ -18,9 +18,6 @@
 #define DAC_AB_Pin GPIO_PIN_15
 #define DAC_AB_GPIO_Port GPIOC
 
-#define LED1_Pin GPIO_PIN_1
-#define LED1_GPIO_Port GPIOE //TODO Just for debug
-
 class ADSR {
 private:
 	uint32_t ch 	= 0;
@@ -32,8 +29,24 @@ private:
 	float 	 r 		= 0;
 	bool     output = false;
 
+	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
+	uint16_t	  led_a_pin,led_d_pin,led_s_pin,led_r_pin;
+
+	enum LEDS { LED_A, LED_D, LED_S, LED_R };
+
+	void setLED(LEDS led);
+
 public:
-	ADSR(uint32_t  ch);
+	ADSR(uint32_t  ch
+		,GPIO_TypeDef  *_led_a_gpio
+		,uint16_t	   _led_a_pin
+		,GPIO_TypeDef  *_led_d_gpio
+		,uint16_t	   _led_d_pin
+		,GPIO_TypeDef  *_led_s_gpio
+		,uint16_t	   _led_s_pin
+		,GPIO_TypeDef  *_led_r_gpio
+		,uint16_t	   _led_r_pin
+	);
 	virtual ~ADSR();
 	void tick();
 	void note_on();
@@ -42,6 +55,7 @@ public:
 	void setD(float _d);
 	void setS(uint32_t _s);
 	void setR(float _r);
+
 };
 
 #endif /* INC_ADSR_H_ */
