@@ -57,6 +57,9 @@ void ADSR::setLED(LEDS led)
 		case LED_R:
 			HAL_GPIO_WritePin(led_r_gpio, led_r_pin, GPIO_PIN_SET);
 			break;
+
+		case LED_OFF:
+			break;
 	}
 }
 
@@ -85,6 +88,7 @@ void ADSR::tick()
 		setLED(LED_R);
 	} else {
 		res = 0;
+		setLED(LED_OFF);
 	}
 
 	//Pick DAC

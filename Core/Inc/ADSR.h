@@ -32,7 +32,7 @@ private:
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
 	uint16_t	  led_a_pin,led_d_pin,led_s_pin,led_r_pin;
 
-	enum LEDS { LED_A, LED_D, LED_S, LED_R };
+	enum LEDS { LED_OFF, LED_A, LED_D, LED_S, LED_R };
 
 	void setLED(LEDS led);
 
