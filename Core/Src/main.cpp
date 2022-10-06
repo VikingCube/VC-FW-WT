@@ -126,9 +126,9 @@ void wave_handler(uint32_t ch, GPIO_TypeDef *port, uint16_t pin)
 
 }
 
-void adsr_note_on(uint32_t ch)
+void adsr_note_on(uint32_t ch, uint8_t vel)
 {
-	adsr[ch].note_on();
+	adsr[ch].note_on(vel);
 }
 
 void adsr_note_off(uint32_t ch)

@@ -29,6 +29,7 @@ private:
 	uint32_t s 		= 0;
 	float 	 r 		= 0;
 	bool     output = false;
+	uint32_t vel    = 0;
 
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
 	uint16_t	  led_a_pin,led_d_pin,led_s_pin,led_r_pin;
@@ -57,7 +58,7 @@ public:
 	);
 	virtual ~ADSR();
 	void tick();
-	void note_on();
+	void note_on(uint8_t _vel);
 	void note_off();
 };
 

@@ -22,7 +22,7 @@
 
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern USBD_MIDI_ItfTypeDef  USBD_MIDI_fops;
-extern void adsr_note_on(uint32_t ch);
+extern void adsr_note_on(uint32_t ch, uint8_t vel);
 extern void adsr_note_off(uint32_t ch);
 extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim4; //Double check if we need this

@@ -90,21 +90,21 @@ void ADSR::tick()
 	float res;
 	if (t <= a) {
 		//Attack phase
-		res = 255/a*t;
+		res = vel/a*t;
 		setLED(LED_A);
 	} else if ((t-a) < d) {
 		//Decay phase
-		res = 255-((255-(0xFF*float(s)/100))/d*(t-a));
+		res = vel-((vel-(0xFF*float(s)/100))/d*(t-a));
 		setLED(LED_D);
 	} else if (output) {
 		//Sustain phase
-		res = 0xFF*(float(s)/100);
+		res = vel*(float(s)/100);
 		setLED(LED_S);
 	} else if (relt < r) {
 		//Release phase
 		relt++;
 		uint32_t rt = r-relt;
-		res = (0xFF*float(s)/100)*(float(rt)/float(r));
+		res = (vel*float(s)/100)*(float(rt)/float(r));
 		setLED(LED_R);
 	} else {
 		res = 0;
@@ -122,10 +122,11 @@ void ADSR::tick()
 	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_SET);
 }
 
-void ADSR::note_on()
+void ADSR::note_on(uint8_t _vel)
 {
 	output = true;
 	t = 0;
+	vel = _vel*2;
 }
 
 void ADSR::note_off()
