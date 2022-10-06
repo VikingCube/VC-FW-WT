@@ -105,9 +105,10 @@ uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as 
 /* USER CODE BEGIN 0 */
 void select_wave(uint32_t ch, uint32_t wave)
 {
-       for (int x = 0; x < NS; x++) {
-               dac_buffer[ch][x] = Wave_LUT[wave][x];
-    }
+   for (int x = 0; x < NS; x++) {
+	   dac_buffer[ch][x] = Wave_LUT[wave][x];
+   }
+   display.set_wt_table(ch, wave); //Update the display statemachine
 }
 
 void wave_handler(uint32_t ch, GPIO_TypeDef *port, uint16_t pin)
@@ -138,6 +139,11 @@ void adsr_tick_it(TIM_HandleTypeDef* tim)
 	//}
 	adsr[0].tick();
 	adsr[1].tick();
+}
+
+void display_update(TIM_HandleTypeDef* tim)
+{
+	display.update();
 }
 /* USER CODE END 0 */
 
@@ -183,6 +189,7 @@ int main(void)
   HAL_TIM_Base_Start(&htim2); //DAC Ch1
   HAL_TIM_Base_Start(&htim4); //DAC Ch2
   HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
+  HAL_TIM_Base_Start_IT(&htim6); //Display update
 
   /* USER CODE END 2 */
 
@@ -198,7 +205,6 @@ int main(void)
   {
 	  //HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
       //HAL_Delay(100);
-
 	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
 
@@ -579,14 +585,14 @@ static void MX_TIM6_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM6_Init 2 */
-
+  HAL_TIM_RegisterCallback(&htim6, HAL_TIM_PERIOD_ELAPSED_CB_ID, display_update);
   /* USER CODE END TIM6_Init 2 */
 
 }
