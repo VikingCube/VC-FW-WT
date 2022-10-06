@@ -81,22 +81,26 @@ static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
+
+Display display;
 ADSR adsr[] = {
 				ADSR(0
 					,LED4_GPIO_Port ,LED4_Pin
 					,LED5_GPIO_Port ,LED5_Pin
 					,LED6_GPIO_Port ,LED6_Pin
 					,LED7_GPIO_Port ,LED7_Pin
+					,display
+					,adc[0],adc[1],adc[2],adc[3]
 					)
 			   ,ADSR(1
 				    ,LED9_GPIO_Port  ,LED9_Pin
 					,LED10_GPIO_Port ,LED10_Pin
 					,LED11_GPIO_Port ,LED11_Pin
 					,LED12_GPIO_Port ,LED12_Pin
+					,display
+					,adc[4],adc[5],adc[6],adc[7]
 				    )
 }; //Will this call some copy constructor or so?
-
-Display display;
 
 uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as real C++
 /* USER CODE END PFP */
@@ -207,17 +211,6 @@ int main(void)
       //HAL_Delay(100);
 	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
-
-	  adsr[0].setA(float(adc[0]/10));
-	  adsr[0].setD(float(adc[1]/10));
-	  adsr[0].setS(float(adc[2])/4096*100);
-	  adsr[0].setR(float(adc[3]/10));
-
-	  adsr[1].setA(float(adc[4]/10));
-	  adsr[1].setD(float(adc[5]/10));
-	  adsr[1].setS(float(adc[6])/4096*100);
-	  adsr[1].setR(float(adc[7]/10));
-
 /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

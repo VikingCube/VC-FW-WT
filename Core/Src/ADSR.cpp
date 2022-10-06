@@ -16,6 +16,11 @@ ADSR::ADSR(uint32_t _ch
 		,uint16_t	   _led_s_pin
 		,GPIO_TypeDef  *_led_r_gpio
 		,uint16_t	   _led_r_pin
+		,Display      &_display
+		,uint32_t      &_ad_a
+		,uint32_t      &_ad_d
+		,uint32_t      &_ad_s
+		,uint32_t      &_ad_r
 	)
 		:ch(_ch)
 		,led_a_gpio(_led_a_gpio)
@@ -26,6 +31,11 @@ ADSR::ADSR(uint32_t _ch
 		,led_s_pin(_led_s_pin)
 		,led_r_gpio(_led_r_gpio)
 		,led_r_pin(_led_r_pin)
+		,display(_display)
+		,ad_a(_ad_a)
+		,ad_d(_ad_d)
+		,ad_s(_ad_s)
+		,ad_r(_ad_r)
 {
 }
 
@@ -35,6 +45,7 @@ ADSR::~ADSR() {
 
 void ADSR::setLED(LEDS led)
 {
+	//Update display about our changes
 	return; //TODO until we get the new LEDS
 	//Turn off all
 	HAL_GPIO_WritePin(led_a_gpio, led_a_pin, GPIO_PIN_RESET);
@@ -66,6 +77,14 @@ void ADSR::setLED(LEDS led)
 
 void ADSR::tick()
 {
+	//Read the AD Values
+	a = float(ad_a/10);
+	d = float(ad_d/10);
+	s = float(ad_s)/4096*100;
+	r = float(ad_r/10);
+
+	//Update display from here
+	display.adsr(ch, ad_a, ad_d, ad_s, ad_r);
 	//Linear ADSR
 	t++; //Increase tick
 	float res;
@@ -116,7 +135,3 @@ void ADSR::note_off()
 	t = a+d+1; //So it jumps to release phase
 }
 
-void ADSR::setA(float _a) { a = _a; }
-void ADSR::setD(float _d) { d = _d; }
-void ADSR::setS(uint32_t _s) { s = _s; }
-void ADSR::setR(float _r) { r = _r; }

@@ -69,6 +69,12 @@ private:
 	//TABLE - the state for displaying the WT Table selected
 	uint32_t table[2]; //One for each channel
 
+	//ADSR
+	uint32_t adsr_states[2][8];
+	uint32_t adsr_tmr = 0;
+	uint32_t adsr_active_pot = 0;
+	uint32_t adsr_active_ch  = 0;
+
 	void leds_off();
 public:
 	Display();
@@ -76,7 +82,10 @@ public:
 
 	void update(); //Interface to call the update from timer callback
 
-	void set_wt_table(uint32_t ch, uint32_t val) { table[ch] = val; }; //Yeah can throw exceptions, but we won't right? :)
+	//IF for WT Selection
+	void set_wt_table(uint32_t ch, uint32_t val) { state = TABLE; table[ch] = val; }; //Yeah can throw exceptions, but we won't right? :)
+	//IF for ADSR Updates
+	void adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r);
 };
 
 #endif /* DISPLAY_H_ */
