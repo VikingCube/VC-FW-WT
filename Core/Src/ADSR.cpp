@@ -35,6 +35,7 @@ ADSR::~ADSR() {
 
 void ADSR::setLED(LEDS led)
 {
+	return; //TODO until we get the new LEDS
 	//Turn off all
 	HAL_GPIO_WritePin(led_a_gpio, led_a_pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(led_d_gpio, led_d_pin, GPIO_PIN_RESET);

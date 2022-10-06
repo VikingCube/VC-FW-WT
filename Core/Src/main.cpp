@@ -22,8 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "adsr.h"
+#include "ADSR.h"
 #include "defines.h"
+#include "Display.h"
 
 /* USER CODE END Includes */
 
@@ -51,6 +52,7 @@ DMA_HandleTypeDef hdma_dac2;
 
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim4;
+TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
 
 /* USER CODE BEGIN PV */
@@ -77,6 +79,7 @@ static void MX_DAC_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 ADSR adsr[] = {
 				ADSR(0
@@ -92,6 +95,9 @@ ADSR adsr[] = {
 					,LED12_GPIO_Port ,LED12_Pin
 				    )
 }; //Will this call some copy constructor or so?
+
+Display display;
+
 uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as real C++
 /* USER CODE END PFP */
 
@@ -170,6 +176,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM7_Init();
   MX_USB_DEVICE_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)dac_buffer[0], NS, DAC_ALIGN_12B_R);  //Start with Sin
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer[1], NS, DAC_ALIGN_12B_R);  //Start with Sin
@@ -189,10 +196,10 @@ int main(void)
 
   while (1)
   {
-	  HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
-      HAL_Delay(100);
+	  //HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
+      //HAL_Delay(100);
 
-	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin);
+	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
 
 	  adsr[0].setA(float(adc[0]/10));
@@ -543,6 +550,44 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 0;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 65535;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 
