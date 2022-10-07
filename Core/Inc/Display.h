@@ -61,9 +61,11 @@ public:
 class Display {
 private:
 	enum State {
-		TABLE, ADSR
+		TABLE, ADSR, UV
 	} state = TABLE;
 	Pin leds[18];
+
+	uint32_t state_tmr = 0;
 
 	//State storages
 	//TABLE - the state for displaying the WT Table selected
@@ -71,11 +73,14 @@ private:
 
 	//ADSR
 	uint32_t adsr_states[2][8];
-	uint32_t adsr_tmr = 0;
 	uint32_t adsr_active_pot = 0;
 	uint32_t adsr_active_ch  = 0;
 
+	//UV
+	uint8_t adsr_gain[2];
+
 	void leds_off();
+	void set_state_timer(uint32_t time) { state_tmr = time; };
 public:
 	Display();
 	virtual ~Display();
@@ -86,6 +91,7 @@ public:
 	void set_wt_table(uint32_t ch, uint32_t val) { state = TABLE; table[ch] = val; }; //Yeah can throw exceptions, but we won't right? :)
 	//IF for ADSR Updates
 	void adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r);
+	void adsr_update_gain(uint32_t ch, uint8_t gain) {adsr_gain[ch] = gain;};
 };
 
 #endif /* DISPLAY_H_ */

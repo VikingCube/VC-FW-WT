@@ -94,7 +94,7 @@ void ADSR::tick()
 		setLED(LED_A);
 	} else if ((t-a) < d) {
 		//Decay phase
-		res = vel-((vel-(0xFF*float(s)/100))/d*(t-a));
+		res = vel-((vel-(vel*float(s)/100))/d*(t-a));
 		setLED(LED_D);
 	} else if (output) {
 		//Sustain phase
@@ -115,7 +115,8 @@ void ADSR::tick()
 	if (ch == 0) HAL_GPIO_WritePin(DAC_AB_GPIO_Port, DAC_AB_Pin, GPIO_PIN_RESET);
 	if (ch == 1) HAL_GPIO_WritePin(DAC_AB_GPIO_Port, DAC_AB_Pin, GPIO_PIN_SET);
 	//Write Data
-	DAC_DATA_GPIO->ODR = uint32_t(res);
+	DAC_DATA_GPIO->ODR = uint8_t(res);
+	display.adsr_update_gain(ch, uint8_t(res));
 	//DAC_DATA_GPIO->ODR = 0x00FF;
 	//CS
 	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_RESET);

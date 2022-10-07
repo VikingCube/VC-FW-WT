@@ -56,29 +56,40 @@ Display::~Display() {
 void Display::update()
 {
 	leds_off();
+	state_tmr--;
+	if (state_tmr == 0) {
+		//state = TABLE; //Default state
+		state=UV; //TODO
+	}
 	switch (state) {
 		case TABLE:
+		{
 			//Set CH0
 			leds[table[0]].set();
 			leds[table[1]+8].set();
 			break;
+		}
 		case ADSR:
-			adsr_tmr--;
-			if (adsr_tmr == 0) {
-				state = TABLE; //Default
-			}
-			/*
-			for(uint32_t i = 0; i <= uint32_t(adsr_states[0].a/512); i++) {
-				leds[i].set();
-				leds[i+8].set();
-			}
-			*/
+		{
 			int32_t x = 7-uint32_t(adsr_states[adsr_active_ch][adsr_active_pot]/512);
 			for(int32_t i = 7; i >= x; i--) {
 					leds[i].set();
 					leds[i+8].set();
 			}
 			break;
+		}
+		case UV:
+		{
+			int32_t x = 7-uint32_t(adsr_gain[0]/32);
+			for(int32_t i = 7; i >= x; i--) {
+				leds[i].set();
+			}
+			int32_t x2 = 7-uint32_t(adsr_gain[1]/32);
+			for(int32_t i = 7; i >= x2; i--) {
+				leds[i+8].set();
+			}
+			break;
+		}
 	}
 }
 
@@ -99,7 +110,7 @@ void Display::adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r)
 	for (int i = 0; i < 4 ; i++) {
 		if (abs(adsr_states[ch][i] - adsr_states[ch][i+4]) > 512) {
 			state = ADSR;
-			adsr_tmr = 0x0FFF;
+			set_state_timer(0x0FFF);
 			adsr_states[ch][i+4] = adsr_states[ch][i];
 			adsr_active_pot=i;
 			adsr_active_ch=ch;

@@ -207,8 +207,6 @@ int main(void)
 
   while (1)
   {
-	  //HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
-      //HAL_Delay(100);
 	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
 /* USER CODE END WHILE */
