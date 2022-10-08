@@ -132,12 +132,14 @@ static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length) //TODO DEBUG This 
 
   if (msgtype == 0x90) { //NOTE ON
 	  if (chan == 0x00) {
+		  	  HAL_TIM_Base_Stop(&htim2);
 	  		  htim2.Init.Period = midi_to_cnt[b1];
 	  		  if (HAL_TIM_Base_Init(&htim2) != HAL_OK) { Error_Handler(); }
 	  		  HAL_TIM_Base_Start(&htim2);
 	  		  adsr_note_on(0, b2);
 	  }
 	  if (chan == 0x01) {
+		  HAL_TIM_Base_Stop(&htim4);
 		  htim4.Init.Period = midi_to_cnt[b1];
 		  if (HAL_TIM_Base_Init(&htim4) != HAL_OK) { Error_Handler(); }
 		  HAL_TIM_Base_Start(&htim4);
