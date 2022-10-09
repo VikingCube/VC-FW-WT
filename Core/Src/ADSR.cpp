@@ -146,14 +146,6 @@ void ADSR::note_off(uint8_t _note)
 	t = a+d+1; //So it jumps to release phase
 }
 
-void ADSR::handle_note_off()
-{
-	//Whit this little workaround we wait for the DAC to finish with the last round, so we close at "0" - no more click sound?
-	if (!osc_on) {
-		HAL_TIM_Base_Stop_IT(&tim);
-	}
-}
-
 void ADSR::error_handler() {
 	__disable_irq();
 	while(1) {

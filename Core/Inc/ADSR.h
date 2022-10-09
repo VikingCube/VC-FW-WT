@@ -30,7 +30,6 @@ private:
 	uint32_t s 		= 0;
 	float 	 r 		= 0;
 	bool     output = false;
-	bool     osc_on = false;
 	uint32_t vel    = 0;
 
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
@@ -64,7 +63,6 @@ public:
 	void tick();
 	void note_on(uint8_t _note, uint8_t _vel);
 	void note_off(uint8_t _note);
-	void handle_note_off();
 };
 
 #endif /* INC_ADSR_H_ */

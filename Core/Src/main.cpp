@@ -135,16 +135,6 @@ void adsr_tick_it(TIM_HandleTypeDef* tim)
 	adsr[1].tick();
 }
 
-void wave_retrigger_ch0(TIM_HandleTypeDef* tim)
-{
-	adsr[0].handle_note_off();
-}
-
-void wave_retrigger_ch1(TIM_HandleTypeDef* tim)
-{
-	adsr[1].handle_note_off();
-}
-
 void display_update(TIM_HandleTypeDef* tim)
 {
 	display.update();
