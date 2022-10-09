@@ -147,7 +147,8 @@ void adsr_tick_it(TIM_HandleTypeDef* tim)
 
 void wave_retrigger(TIM_HandleTypeDef* tim)
 {
-	HAL_TIM_Base_Start_IT(&htim2);
+	//HAL_TIM_Base_Start_IT(&htim2);
+	HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
 }
 
 void display_update(TIM_HandleTypeDef* tim)
@@ -498,7 +499,7 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
