@@ -145,6 +145,11 @@ void adsr_tick_it(TIM_HandleTypeDef* tim)
 	adsr[1].tick();
 }
 
+void wave_retrigger(TIM_HandleTypeDef* tim)
+{
+	HAL_TIM_Base_Start_IT(&htim2);
+}
+
 void display_update(TIM_HandleTypeDef* tim)
 {
 	display.update();
@@ -190,7 +195,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)dac_buffer[0], NS, DAC_ALIGN_12B_R);  //Start with Sin
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer[1], NS, DAC_ALIGN_12B_R);  //Start with Sin
-  HAL_TIM_Base_Start(&htim2); //DAC Ch1
+  HAL_TIM_Base_Start_IT(&htim2); //DAC Ch1
   HAL_TIM_Base_Start(&htim4); //DAC Ch2
   HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
   HAL_TIM_Base_Start_IT(&htim6); //Display update
@@ -209,7 +214,7 @@ int main(void)
   {
 	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
-/* USER CODE END WHILE */
+    /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
@@ -493,14 +498,14 @@ static void MX_TIM2_Init(void)
   {
     Error_Handler();
   }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_ENABLE;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
   if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-
+  HAL_TIM_RegisterCallback(&htim2, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger);
   /* USER CODE END TIM2_Init 2 */
 
 }
