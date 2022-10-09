@@ -59,15 +59,6 @@ TIM_HandleTypeDef htim7;
 uint32_t dac_buffer[2][NS] = {0};
 uint32_t adc[12];
 
-//Calculated to actual NS from google sheet
-uint32_t midi_to_cnt[] = { 40138,37890,35763,33740,31857,30062,28385,26786,25279,23864,22521,21259,
-		20069,18945,17881,16870,15928,15031,14192,13393,12640,11932,11260,10629,
-		10034,9472,8941,8435,7964,7515,7096,6696,6320,5966,5630,5315,5017,4736,4470,4218,3982,3758,3548,3348,3160,
-		2983,2815,2657,2509,2368,2235,2109,1991,1879,1774,1674,1580,1491,1408,1329,1254,1184,1118,1054,996,939,887,
-		837,790,746,704,664,627,592,559,527,498,470,444,419,395,373,352,332,314,296,279,264,249,235,222,209,197,186,
-		176,166,157,148,140,132,124,117,111,105,99,93,88,83,78,74,70,66,62,59,55,52,49,47,44,42,39,37,35,33,31,29,
-		28,26,25,23,22,21
-};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,6 +76,7 @@ static void MX_TIM6_Init(void);
 Display display;
 ADSR adsr[] = {
 				ADSR(0
+					,htim2
 					,LED4_GPIO_Port ,LED4_Pin
 					,LED5_GPIO_Port ,LED5_Pin
 					,LED6_GPIO_Port ,LED6_Pin
@@ -93,6 +85,7 @@ ADSR adsr[] = {
 					,adc[0],adc[1],adc[2],adc[3]
 					)
 			   ,ADSR(1
+					,htim4
 				    ,LED9_GPIO_Port  ,LED9_Pin
 					,LED10_GPIO_Port ,LED10_Pin
 					,LED11_GPIO_Port ,LED11_Pin
@@ -126,21 +119,18 @@ void wave_handler(uint32_t ch, GPIO_TypeDef *port, uint16_t pin)
 
 }
 
-void adsr_note_on(uint32_t ch, uint8_t vel)
+void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel)
 {
-	adsr[ch].note_on(vel);
+	adsr[ch].note_on(note, vel);
 }
 
-void adsr_note_off(uint32_t ch)
+void adsr_note_off(uint32_t ch, uint8_t note)
 {
-	adsr[ch].note_off();
+	adsr[ch].note_off(note);
 }
 
 void adsr_tick_it(TIM_HandleTypeDef* tim)
 {
-	//for(uint32_t i = 0; i < 2; i++) {
-	//	adsr[i].tick();
-	//}
 	adsr[0].tick();
 	adsr[1].tick();
 }

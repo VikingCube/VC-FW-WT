@@ -124,30 +124,21 @@ static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length) //TODO DEBUG This 
   }
   uint8_t chan = buffer[1] & 0x0f;
   uint8_t msgtype = buffer[1] & 0xf0;
-  uint8_t b1 =  buffer[2]; //Note ?
-  uint8_t b2 =  buffer[3]; //Velocity ? --> TODO: Pass it to note on - calculate it into ADSR.
-  //uint16_t b = ((b2 & 0x7f) << 7) | (b1 & 0x7f);
-
-  //TODO how to give the date up to the user level?
+  uint8_t b1 =  buffer[2]; //Note
+  uint8_t b2 =  buffer[3]; //Velocity
 
   if (msgtype == 0x90) { //NOTE ON
 	  if (chan == 0x00) {
-		  	  HAL_TIM_Base_Stop_IT(&htim2);
-	  		  htim2.Init.Period = midi_to_cnt[b1];
-	  		  if (HAL_TIM_Base_Init(&htim2) != HAL_OK) { Error_Handler(); }
-	  		  HAL_TIM_Base_Start_IT(&htim2);
-	  		  adsr_note_on(0, b2);
+		  adsr_note_on(0, b1, b2);
 	  }
+	  /* TODO
 	  if (chan == 0x01) {
-		  HAL_TIM_Base_Stop(&htim4);
-		  htim4.Init.Period = midi_to_cnt[b1];
-		  if (HAL_TIM_Base_Init(&htim4) != HAL_OK) { Error_Handler(); }
-		  HAL_TIM_Base_Start(&htim4);
-		  adsr_note_on(1, b2);
+		  adsr_note_on(1, b1, b2);
 	  }
+	  */
   } else if (msgtype == 0x80) { //NOTE OFF
 	  if (chan < 0x02) {
-		  adsr_note_off(chan);
+		  adsr_note_off(chan, b1);
 	  }
   }
   return ret;

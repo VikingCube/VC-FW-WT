@@ -22,11 +22,8 @@
 
 extern USBD_HandleTypeDef hUsbDeviceFS;
 extern USBD_MIDI_ItfTypeDef  USBD_MIDI_fops;
-extern void adsr_note_on(uint32_t ch, uint8_t vel);
-extern void adsr_note_off(uint32_t ch);
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim4; //Double check if we need this
-extern uint32_t midi_to_cnt[];  //Shall this just go into def?
+extern void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel);
+extern void adsr_note_off(uint32_t ch, uint8_t note);
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 

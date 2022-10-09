@@ -22,6 +22,7 @@
 class ADSR {
 private:
 	uint32_t ch 	= 0;
+	TIM_HandleTypeDef &tim;
 	uint32_t t 		= 0; //Number of ticks from the start
 	uint32_t relt 	= 0; //Number of ticks from the note off
 	float 	 a 		= 0;
@@ -39,9 +40,11 @@ private:
 	enum LEDS { LED_OFF, LED_A, LED_D, LED_S, LED_R };
 
 	void setLED(LEDS led);
+	void error_handler();
 
 public:
 	ADSR(uint32_t  ch
+		,TIM_HandleTypeDef &_tim
 		,GPIO_TypeDef  *_led_a_gpio
 		,uint16_t	   _led_a_pin
 		,GPIO_TypeDef  *_led_d_gpio
@@ -58,8 +61,8 @@ public:
 	);
 	virtual ~ADSR();
 	void tick();
-	void note_on(uint8_t _vel);
-	void note_off();
+	void note_on(uint8_t _note, uint8_t _vel);
+	void note_off(uint8_t _note);
 };
 
 #endif /* INC_ADSR_H_ */

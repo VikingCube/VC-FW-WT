@@ -8,6 +8,7 @@
 #include <ADSR.h>
 
 ADSR::ADSR(uint32_t _ch
+		,TIM_HandleTypeDef &_tim
 		,GPIO_TypeDef  *_led_a_gpio
 		,uint16_t	   _led_a_pin
 		,GPIO_TypeDef  *_led_d_gpio
@@ -23,6 +24,7 @@ ADSR::ADSR(uint32_t _ch
 		,uint32_t      &_ad_r
 	)
 		:ch(_ch)
+		,tim(_tim)
 		,led_a_gpio(_led_a_gpio)
 		,led_a_pin(_led_a_pin)
 		,led_d_gpio(_led_d_gpio)
@@ -123,17 +125,29 @@ void ADSR::tick()
 	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_SET);
 }
 
-void ADSR::note_on(uint8_t _vel)
+void ADSR::note_on(uint8_t _note, uint8_t _vel)
 {
 	output = true;
 	t = 0;
 	vel = _vel*2;
+	HAL_TIM_Base_Stop_IT(&tim);
+	tim.Init.Period = midi_to_cnt[_note];
+	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
+    HAL_TIM_Base_Start_IT(&tim);
 }
 
-void ADSR::note_off()
+void ADSR::note_off(uint8_t _note)
 {
 	output = false;
 	relt = 0;
 	t = a+d+1; //So it jumps to release phase
+}
+
+void ADSR::error_handler() {
+	__disable_irq();
+	while(1) {
+		//TODO Just for debug
+
+	}
 }
 
