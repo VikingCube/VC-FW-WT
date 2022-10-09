@@ -111,7 +111,6 @@ void ADSR::tick()
 	} else {
 		res = 0;
 		setLED(LED_OFF);
-		osc_on = false;
 	}
 
 	//Pick DAC
@@ -136,7 +135,6 @@ void ADSR::note_on(uint8_t _note, uint8_t _vel)
 	tim.Init.Period = midi_to_cnt[_note];
 	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
     HAL_TIM_Base_Start_IT(&tim);
-    osc_on = true;
 }
 
 void ADSR::note_off(uint8_t _note)

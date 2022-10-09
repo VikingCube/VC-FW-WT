@@ -490,7 +490,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-  HAL_TIM_RegisterCallback(&htim2, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger_ch0);
+
   /* USER CODE END TIM2_Init 2 */
 
 }
@@ -535,7 +535,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM4_Init 2 */
-  HAL_TIM_RegisterCallback(&htim4, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger_ch1);
+
   /* USER CODE END TIM4_Init 2 */
 
 }
@@ -596,7 +596,7 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 250; //was 1000
+  htim7.Init.Prescaler = 10; //was 1000
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim7.Init.Period = 1000; //Was 1000
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
