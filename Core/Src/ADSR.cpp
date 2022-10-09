@@ -111,18 +111,20 @@ void ADSR::tick()
 	} else {
 		res = 0;
 		setLED(LED_OFF);
+		osc_on = false;
 	}
 
 	//Pick DAC
 	if (ch == 0) HAL_GPIO_WritePin(DAC_AB_GPIO_Port, DAC_AB_Pin, GPIO_PIN_RESET);
 	if (ch == 1) HAL_GPIO_WritePin(DAC_AB_GPIO_Port, DAC_AB_Pin, GPIO_PIN_SET);
 	//Write Data
+	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_RESET);
 	DAC_DATA_GPIO->ODR = uint8_t(res);
+	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_SET);
 	display.adsr_update_gain(ch, uint8_t(res));
 	//DAC_DATA_GPIO->ODR = 0x00FF;
 	//CS
-	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_SET);
+
 }
 
 void ADSR::note_on(uint8_t _note, uint8_t _vel)
@@ -134,6 +136,7 @@ void ADSR::note_on(uint8_t _note, uint8_t _vel)
 	tim.Init.Period = midi_to_cnt[_note];
 	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
     HAL_TIM_Base_Start_IT(&tim);
+    osc_on = true;
 }
 
 void ADSR::note_off(uint8_t _note)
@@ -143,11 +146,18 @@ void ADSR::note_off(uint8_t _note)
 	t = a+d+1; //So it jumps to release phase
 }
 
+void ADSR::handle_note_off()
+{
+	//Whit this little workaround we wait for the DAC to finish with the last round, so we close at "0" - no more click sound?
+	if (!osc_on) {
+		HAL_TIM_Base_Stop_IT(&tim);
+	}
+}
+
 void ADSR::error_handler() {
 	__disable_irq();
 	while(1) {
 		//TODO Just for debug
-
 	}
 }
 

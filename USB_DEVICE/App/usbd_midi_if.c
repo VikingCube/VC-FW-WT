@@ -128,14 +128,9 @@ static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length) //TODO DEBUG This 
   uint8_t b2 =  buffer[3]; //Velocity
 
   if (msgtype == 0x90) { //NOTE ON
-	  if (chan == 0x00) {
-		  adsr_note_on(0, b1, b2);
+	  if (chan < 0x02) {
+		  adsr_note_on(chan, b1, b2);
 	  }
-	  /* TODO
-	  if (chan == 0x01) {
-		  adsr_note_on(1, b1, b2);
-	  }
-	  */
   } else if (msgtype == 0x80) { //NOTE OFF
 	  if (chan < 0x02) {
 		  adsr_note_off(chan, b1);

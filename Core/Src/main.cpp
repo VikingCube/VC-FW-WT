@@ -135,10 +135,14 @@ void adsr_tick_it(TIM_HandleTypeDef* tim)
 	adsr[1].tick();
 }
 
-void wave_retrigger(TIM_HandleTypeDef* tim)
+void wave_retrigger_ch0(TIM_HandleTypeDef* tim)
 {
-	//HAL_TIM_Base_Start_IT(&htim2);
-	HAL_GPIO_TogglePin(LED17_GPIO_Port, LED17_Pin);
+	adsr[0].handle_note_off();
+}
+
+void wave_retrigger_ch1(TIM_HandleTypeDef* tim)
+{
+	adsr[1].handle_note_off();
 }
 
 void display_update(TIM_HandleTypeDef* tim)
@@ -496,7 +500,7 @@ static void MX_TIM2_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM2_Init 2 */
-  HAL_TIM_RegisterCallback(&htim2, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger);
+  HAL_TIM_RegisterCallback(&htim2, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger_ch0);
   /* USER CODE END TIM2_Init 2 */
 
 }
@@ -541,7 +545,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM4_Init 2 */
-
+  HAL_TIM_RegisterCallback(&htim4, HAL_TIM_PERIOD_ELAPSED_CB_ID, wave_retrigger_ch1);
   /* USER CODE END TIM4_Init 2 */
 
 }
