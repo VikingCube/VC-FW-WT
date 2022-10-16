@@ -14,22 +14,22 @@ BTNHandler::BTNHandler(
 		,GPIO_TypeDef *btn3_prt, uint16_t btn3_pin
 		,GPIO_TypeDef *btn4_prt, uint16_t btn4_pin
 		,GPIO_TypeDef *btn5_prt, uint16_t btn5_pin
-		,BTNAction a0
-		,BTNAction a1
-		,BTNAction a2
-		,BTNAction a3
-		,BTNAction a4
-		,BTNAction a5
-		,BTNAction a6
-		,BTNAction a7
-		,BTNAction a8
-		,BTNAction a9
-		,BTNAction a10
-		,BTNAction a11
-		,BTNAction a12
-		,BTNAction a13
-		,BTNAction a14
-		,BTNAction a15
+		,BTNAction &a0
+		,BTNAction &a1
+		,BTNAction &a2
+		,BTNAction &a3
+		,BTNAction &a4
+		,BTNAction &a5
+		,BTNAction &a6
+		,BTNAction &a7
+		,BTNAction &a8
+		,BTNAction &a9
+		,BTNAction &a10
+		,BTNAction &a11
+		,BTNAction &a12
+		,BTNAction &a13
+		,BTNAction &a14
+		,BTNAction &a15
 ):
 	 btns{
 		Pin(btn0_prt, btn0_pin)
@@ -59,8 +59,8 @@ void BTNHandler::update() {
 
 	for(int i = 0; i < 4 ; i++) { //4 button + 2 shift button
 		if (btns[i].is_pressed()) {
-			action = i + s1?4:0 + s2?8:0;
-			actions[action].trigger();
+			action = i + (s1?4:0) + (s2?8:0);
+			actions[action].get().trigger();
 			while(btns[i].is_pressed()) {} //Wait for user to release the btn
 			break;
 		}

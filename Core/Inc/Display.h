@@ -50,17 +50,26 @@
 #define LED17_GPIO_Port GPIOB
 
 class Display {
+public:
+	#define NUM_OF_TABLES 2
+	enum Tables {
+		WT, ADSR_RANGE
+	};
+
 private:
 	enum State {
 		TABLE, ADSR, UV
 	} state = TABLE;
+
+	Tables act_table = WT;
+
 	Pin leds[18];
 
 	uint32_t state_tmr = 0;
 
 	//State storages
 	//TABLE - the state for displaying the WT Table selected
-	uint32_t table[2]; //One for each channel
+	uint32_t table[NUM_OF_TABLES][2]; //One for each channel
 
 	//ADSR
 	uint32_t adsr_states[2][8];
@@ -79,7 +88,7 @@ public:
 	void update(); //Interface to call the update from timer callback
 
 	//IF for WT Selection
-	void set_wt_table(uint32_t ch, uint32_t val) { state = TABLE; table[ch] = val; set_state_timer(); }; //Yeah can throw exceptions, but we won't right? :)
+	void set_wt_table(Tables t, uint32_t ch, uint32_t val) { state = TABLE; act_table = t, table[t][ch] = val; set_state_timer(); }; //Yeah can throw exceptions, but we won't right? :)
 	//IF for ADSR Updates
 	void adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r);
 	void adsr_update_gain(uint32_t ch, uint8_t gain) {adsr_gain[ch] = gain;};

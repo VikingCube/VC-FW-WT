@@ -50,8 +50,9 @@ void Display::update()
 		case TABLE:
 		{
 			//Set CH0
-			leds[table[0]].set();
-			leds[table[1]+8].set();
+			leds[table[act_table][0]].set();
+			//Set CH1
+			leds[table[act_table][1]+8].set();
 			break;
 		}
 		case ADSR:

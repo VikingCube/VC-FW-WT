@@ -9,20 +9,21 @@
 #define BTNHANDLER_H_
 
 #include "Pin.h"
+#include <functional>
 
 #define NUM_OF_BTNS 6
 
 class BTNAction {
 public:
-	BTNAction();
-	virtual ~BTNAction();
-	virtual void trigger(); //When the button pressed this will be called
+	BTNAction() {};
+	virtual ~BTNAction() {};
+	virtual void trigger() = 0; //When the button pressed this will be called
 };
 
 class BTNHandler {
 private:
 	Pin btns[NUM_OF_BTNS];
-	BTNAction actions[16];
+	std::reference_wrapper<BTNAction> actions[16];
 
 public:
 	BTNHandler(
@@ -32,22 +33,22 @@ public:
 			,GPIO_TypeDef *btn3_prt, uint16_t btn3_pin
 			,GPIO_TypeDef *btn4_prt, uint16_t btn4_pin
 			,GPIO_TypeDef *btn5_prt, uint16_t btn5_pin
-			,BTNAction a0
-			,BTNAction a1
-			,BTNAction a2
-			,BTNAction a3
-			,BTNAction a4
-			,BTNAction a5
-			,BTNAction a6
-			,BTNAction a7
-			,BTNAction a8
-			,BTNAction a9
-			,BTNAction a10
-			,BTNAction a11
-			,BTNAction a12
-			,BTNAction a13
-			,BTNAction a14
-			,BTNAction a15
+			,BTNAction &a0
+			,BTNAction &a1
+			,BTNAction &a2
+			,BTNAction &a3
+			,BTNAction &a4
+			,BTNAction &a5
+			,BTNAction &a6
+			,BTNAction &a7
+			,BTNAction &a8
+			,BTNAction &a9
+			,BTNAction &a10
+			,BTNAction &a11
+			,BTNAction &a12
+			,BTNAction &a13
+			,BTNAction &a14
+			,BTNAction &a15
 	);
 	virtual ~BTNHandler();
 	void update();

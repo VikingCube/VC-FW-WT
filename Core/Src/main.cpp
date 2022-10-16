@@ -25,6 +25,8 @@
 #include "ADSR.h"
 #include "defines.h"
 #include "Display.h"
+#include "MultiOption.h"
+#include "BTNHandler.h"
 
 /* USER CODE END Includes */
 
@@ -43,6 +45,24 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+class MOWaves : public MultiOption
+{
+private:
+	uint32_t ch;
+public:
+	MOWaves(uint32_t _ch);
+	~MOWaves() {};
+	void handler();
+	uint32_t get_ch() { return ch; }
+};
+
+class DefBTNAction : public BTNAction
+{
+public:
+	void trigger() {};
+};
+
+
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
@@ -95,28 +115,52 @@ ADSR adsr[] = {
 				    )
 }; //Will this call some copy constructor or so?
 
-uint32_t act[2] = {0}; //Oh boy this code is criminal - we must rewrite this as real C++
+DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
+MOWaves mowave0(0), mowave1(1);
+
+BTNHandler btn_handler(
+		 BTN0_GPIO_Port, BTN0_Pin
+		,BTN1_GPIO_Port, BTN1_Pin
+		,BTN2_GPIO_Port, BTN2_Pin
+		,BTN3_GPIO_Port, BTN3_Pin
+		,BTN4_GPIO_Port, BTN4_Pin
+		,BTN5_GPIO_Port, BTN5_Pin
+		,mowave0
+		,mowave1
+		,def2
+		,def3
+		,def4
+		,def5
+		,def6
+		,def7
+		,def8
+		,def9
+		,def10
+		,def11
+		,def12
+		,def13
+		,def14
+		,def15
+);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void select_wave(uint32_t ch, uint32_t wave)
+MOWaves::MOWaves(uint32_t _ch)
+ :MultiOption(NR_WAVES),ch(_ch)
 {
-   for (int x = 0; x < NS; x++) {
-	   dac_buffer[ch][x] = Wave_LUT[wave][x];
-   }
-   display.set_wt_table(ch, wave); //Update the display statemachine
 }
 
-void wave_handler(uint32_t ch, GPIO_TypeDef *port, uint16_t pin)
+void select_wave(uint32_t ch, uint32_t wave)
 {
-	  if (!HAL_GPIO_ReadPin(port, pin)) { //TODO this would be much nicer from IT
-		  act[ch]++;
-		  if (act[ch] == NR_WAVES) act[ch] = 0;
-		  select_wave(ch, act[ch]);
-		  while (!HAL_GPIO_ReadPin(port, pin)) { } //Wait for the user to release the button
-	  }
+}
 
+void MOWaves::handler()
+{
+    for (int x = 0; x < NS; x++) {
+ 	   dac_buffer[get_ch()][x] = Wave_LUT[get_act()][x];
+    }
+    display.set_wt_table(Display::Tables::WT, get_ch(), get_act()); //Update the display statemachine
 }
 
 void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel)
@@ -197,6 +241,7 @@ int main(void)
 
   while (1)
   {
+	  btn_handler.update();
 	  //wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
 	  //wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
     /* USER CODE END WHILE */
