@@ -197,8 +197,8 @@ int main(void)
 
   while (1)
   {
-	  wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
-	  wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
+	  //wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
+	  //wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

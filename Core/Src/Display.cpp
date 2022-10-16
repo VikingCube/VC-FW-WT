@@ -7,21 +7,6 @@
 
 #include "Display.h"
 
-Pin::Pin(GPIO_TypeDef* _gpio, uint16_t _pin)
-	:gpio(_gpio)
-	,pin(_pin)
-{}
-
-void Pin::set()
-{
-	HAL_GPIO_WritePin(gpio, pin, GPIO_PIN_SET);
-}
-
-void Pin::reset()
-{
-	HAL_GPIO_WritePin(gpio, pin, GPIO_PIN_RESET);
-}
-
 Display::Display()
 	:leds{
 		 Pin(LED0_GPIO_Port, LED0_Pin)

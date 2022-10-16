@@ -10,6 +10,7 @@
 
 #include "stm32f4xx_hal.h"
 #include <iterator>
+#include "Pin.h"
 
 #define LED0_Pin GPIO_PIN_0
 #define LED0_GPIO_Port GPIOE
@@ -47,16 +48,6 @@
 #define LED16_GPIO_Port GPIOB
 #define LED17_Pin GPIO_PIN_15
 #define LED17_GPIO_Port GPIOB
-
-class Pin {
-private:
-	GPIO_TypeDef* gpio;
-	uint16_t pin;
-public:
-	Pin(GPIO_TypeDef* _gpio, uint16_t _pin);
-	void set();
-	void reset();
-};
 
 class Display {
 private:
