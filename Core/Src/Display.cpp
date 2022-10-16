@@ -108,7 +108,7 @@ void Display::adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r)
 	adsr_states[ch][3] = r;
 
 	for (int i = 0; i < 4 ; i++) {
-		if (abs(adsr_states[ch][i] - adsr_states[ch][i+4]) > 512) {
+		if (abs(adsr_states[ch][i] - adsr_states[ch][i+4]) > 1024) {
 			state = ADSR;
 			set_state_timer(0x0FFF);
 			adsr_states[ch][i+4] = adsr_states[ch][i];

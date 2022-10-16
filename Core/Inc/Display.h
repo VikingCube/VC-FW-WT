@@ -80,7 +80,7 @@ private:
 	uint8_t adsr_gain[2];
 
 	void leds_off();
-	void set_state_timer(uint32_t time) { state_tmr = time; };
+	void set_state_timer(uint32_t time = 0x0FFF) { state_tmr = time; };
 public:
 	Display();
 	virtual ~Display();
@@ -88,7 +88,7 @@ public:
 	void update(); //Interface to call the update from timer callback
 
 	//IF for WT Selection
-	void set_wt_table(uint32_t ch, uint32_t val) { state = TABLE; table[ch] = val; }; //Yeah can throw exceptions, but we won't right? :)
+	void set_wt_table(uint32_t ch, uint32_t val) { state = TABLE; table[ch] = val; set_state_timer(); }; //Yeah can throw exceptions, but we won't right? :)
 	//IF for ADSR Updates
 	void adsr(uint32_t ch, uint32_t a, uint32_t d, uint32_t s, uint32_t r);
 	void adsr_update_gain(uint32_t ch, uint8_t gain) {adsr_gain[ch] = gain;};
