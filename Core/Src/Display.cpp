@@ -49,6 +49,7 @@ void Display::update()
 	switch (state) {
 		case TABLE:
 		{
+			if (act_table == ADSR_RANGE) leds[17].set();
 			//Set CH0
 			leds[table[act_table][0]].set();
 			//Set CH1
