@@ -67,9 +67,9 @@ class ADSRRange : public MultiOption
 {
 private:
 	uint32_t ch;
-	TIM_HandleTypeDef tim;
+	TIM_HandleTypeDef &tim;
 	void error_handler();
-	const uint32_t ranges[8] = {0x0000, 0x000F, 0x00F0, 0x0F00, 0xF000, 0xF0F0, 0xFF00, 0xFFFF};
+	const uint32_t ranges[8] = {0x000A, 0x000F, 0x00F0, 0x0F00, 0xF000, 0xF0F0, 0xFF00, 0xFFFF};
 public:
 	ADSRRange(uint32_t ch, TIM_HandleTypeDef &_tim);
 	~ADSRRange() {};
@@ -189,6 +189,7 @@ void ADSRRange::handler()
 {
 	display.set_wt_table(Display::Tables::ADSR_RANGE, get_ch(), get_act());
 	HAL_TIM_Base_Stop_IT(&tim);
+	//HAL_TIM_Base_DeInit(&tim); - is this fck up tim?
 	tim.Init.Prescaler = ranges[get_act()];
 	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
 	HAL_TIM_Base_Start_IT(&tim);
