@@ -271,6 +271,7 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim2); //DAC Ch1
   HAL_TIM_Base_Start(&htim4); //DAC Ch2
   HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
+  HAL_TIM_Base_Start_IT(&htim10); //ADSR Ticks
   HAL_TIM_Base_Start_IT(&htim6); //Display update
 
   /* USER CODE END 2 */
@@ -725,13 +726,13 @@ static void MX_TIM10_Init(void)
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim10.Init.Period = 1000;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
   {
     Error_Handler();
   }
   /* USER CODE BEGIN TIM10_Init 2 */
-  HAL_TIM_RegisterCallback(&htim7, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it_1);
+  HAL_TIM_RegisterCallback(&htim10, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it_1);
   /* USER CODE END TIM10_Init 2 */
 
 }
