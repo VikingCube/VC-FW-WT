@@ -77,6 +77,11 @@ void ADSR::setLED(LEDS led)
 	}
 }
 
+void ADSR::update_display()
+{
+	display.adsr(ch, ad_a, ad_d, ad_s, ad_r);
+}
+
 void ADSR::tick()
 {
 	//Read the AD Values
@@ -85,8 +90,6 @@ void ADSR::tick()
 	s = float(ad_s)/4096*100;
 	r = float(ad_r/10);
 
-	//Update display from here
-	display.adsr(ch, ad_a, ad_d, ad_s, ad_r);
 	//Linear ADSR
 	t++; //Increase tick
 	float res;

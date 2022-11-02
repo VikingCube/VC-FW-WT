@@ -63,6 +63,7 @@ public:
 	void tick();
 	void note_on(uint8_t _note, uint8_t _vel);
 	void note_off(uint8_t _note);
+	void update_display();
 };
 
 #endif /* INC_ADSR_H_ */
