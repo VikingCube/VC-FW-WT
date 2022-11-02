@@ -88,6 +88,7 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim7;
+TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN PV */
 uint32_t dac_buffer[2][NS] = {0};
@@ -105,6 +106,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM7_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_TIM10_Init(void);
 /* USER CODE BEGIN PFP */
 
 Display display;
@@ -131,7 +133,7 @@ ADSR adsr[] = {
 
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
 MOWaves mowave0(0), mowave1(1);
-ADSRRange moadsr0(0, htim7), moadsr1(1, htim7);  //TODO we need to separate the ticks for the different channels
+ADSRRange moadsr0(0, htim7), moadsr1(1, htim10);
 
 BTNHandler btn_handler(
 		 BTN0_GPIO_Port, BTN0_Pin
@@ -189,7 +191,6 @@ void ADSRRange::handler()
 {
 	display.set_wt_table(Display::Tables::ADSR_RANGE, get_ch(), get_act());
 	HAL_TIM_Base_Stop_IT(&tim);
-	//HAL_TIM_Base_DeInit(&tim); - is this fck up tim?
 	tim.Init.Prescaler = ranges[get_act()];
 	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
 	HAL_TIM_Base_Start_IT(&tim);
@@ -212,9 +213,12 @@ void adsr_note_off(uint32_t ch, uint8_t note)
 	adsr[ch].note_off(note);
 }
 
-void adsr_tick_it(TIM_HandleTypeDef* tim)
+void adsr_tick_it_0(TIM_HandleTypeDef* tim)
 {
 	adsr[0].tick();
+}
+void adsr_tick_it_1(TIM_HandleTypeDef* tim)
+{
 	adsr[1].tick();
 }
 
@@ -260,6 +264,7 @@ int main(void)
   MX_TIM7_Init();
   MX_USB_DEVICE_Init();
   MX_TIM6_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_1, (uint32_t*)dac_buffer[0], NS, DAC_ALIGN_12B_R);  //Start with Sin
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer[1], NS, DAC_ALIGN_12B_R);  //Start with Sin
@@ -680,9 +685,9 @@ static void MX_TIM7_Init(void)
 
   /* USER CODE END TIM7_Init 1 */
   htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 10; //was 1000
+  htim7.Init.Prescaler = 10;
   htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 1000; //Was 1000
+  htim7.Init.Period = 1000;
   htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
   {
@@ -695,8 +700,39 @@ static void MX_TIM7_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM7_Init 2 */
-  HAL_TIM_RegisterCallback(&htim7, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it);
+  HAL_TIM_RegisterCallback(&htim7, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it_0);
   /* USER CODE END TIM7_Init 2 */
+
+}
+
+/**
+  * @brief TIM10 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM10_Init(void)
+{
+
+  /* USER CODE BEGIN TIM10_Init 0 */
+
+  /* USER CODE END TIM10_Init 0 */
+
+  /* USER CODE BEGIN TIM10_Init 1 */
+
+  /* USER CODE END TIM10_Init 1 */
+  htim10.Instance = TIM10;
+  htim10.Init.Prescaler = 10;
+  htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim10.Init.Period = 1000;
+  htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM10_Init 2 */
+  HAL_TIM_RegisterCallback(&htim7, HAL_TIM_PERIOD_ELAPSED_CB_ID, adsr_tick_it_1);
+  /* USER CODE END TIM10_Init 2 */
 
 }
 
