@@ -54,4 +54,10 @@ public:
 	void update();
 };
 
+class DefBTNAction : public BTNAction
+{
+public:
+	void trigger() {};
+};
+
 #endif /* BTNHANDLER_H_ */

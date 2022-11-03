@@ -27,6 +27,7 @@
 #include "Display.h"
 #include "MultiOption.h"
 #include "BTNHandler.h"
+#include "MOWaves.h"
 
 /* USER CODE END Includes */
 
@@ -45,23 +46,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-class MOWaves : public MultiOption
-{
-private:
-	uint32_t ch;
-	void copy_table();
-public:
-	MOWaves(uint32_t _ch);
-	~MOWaves() {};
-	void handler();
-	uint32_t get_ch() { return ch; }
-};
-
-class DefBTNAction : public BTNAction
-{
-public:
-	void trigger() {};
-};
 
 class ADSRRange : public MultiOption
 {
@@ -132,7 +116,7 @@ ADSR adsr[] = {
 }; //Will this call some copy constructor or so?
 
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
-MOWaves mowave0(0), mowave1(1);
+MOWaves mowave0(0, dac_buffer[0], display), mowave1(1, dac_buffer[1], display);
 ADSRRange moadsr0(0, htim7), moadsr1(1, htim10);
 
 BTNHandler btn_handler(
@@ -163,25 +147,6 @@ BTNHandler btn_handler(
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-MOWaves::MOWaves(uint32_t _ch)
- :MultiOption(NR_WAVES),ch(_ch)
-{
-	copy_table();
-}
-
-void MOWaves::handler()
-{
-	copy_table();
-    display.set_wt_table(Display::Tables::WT, get_ch(), get_act()); //TODO: Channel and this could go up into MO
-}
-
-void MOWaves::copy_table()
-{
-    for (int x = 0; x < NS; x++) {
- 	   dac_buffer[get_ch()][x] = Wave_LUT[get_act()][x];
-    }
-}
-
 ADSRRange::ADSRRange(uint32_t _ch, TIM_HandleTypeDef &_tim)
 :MultiOption(8), ch(_ch), tim(_tim)
 {
