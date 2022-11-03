@@ -35,7 +35,6 @@ Display::Display()
 }
 
 Display::~Display() {
-	// TODO Auto-generated destructor stub
 }
 
 void Display::update()

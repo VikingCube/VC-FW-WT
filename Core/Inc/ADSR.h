@@ -12,7 +12,6 @@
 #include "defines.h"
 #include "Display.h"
 
-//TODO is  there any crazy trick  to get these here without passing them?
 #define DAC_DATA_GPIO GPIOD
 #define DAC_CS_Pin GPIO_PIN_14
 #define DAC_CS_GPIO_Port GPIOC
@@ -21,6 +20,7 @@
 
 class ADSR {
 private:
+	bool     onoff  = 0; //1 on 0 off
 	uint32_t ch 	= 0;
 	TIM_HandleTypeDef &tim;
 	uint32_t t 		= 0; //Number of ticks from the start
@@ -31,6 +31,9 @@ private:
 	float 	 r 		= 0;
 	bool     output = false;
 	uint32_t vel    = 0;
+	float    value  = 0; //The last written value of the ADSR output used for release part
+	float    rvalue  = 0; //Release value, so if we re-trigger from the middle of the release we don't go to 0
+	uint8_t  lastnote  = 0; //This is for a case when we trigger notes over and over and we don't want to go silent if the previous note is lifted
 
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
 	uint16_t	  led_a_pin,led_d_pin,led_s_pin,led_r_pin;
@@ -64,6 +67,7 @@ public:
 	void note_on(uint8_t _note, uint8_t _vel);
 	void note_off(uint8_t _note);
 	void update_display();
+	void set_onoff(bool state) { onoff = state; }
 };
 
 #endif /* INC_ADSR_H_ */

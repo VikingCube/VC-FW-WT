@@ -116,7 +116,7 @@ static int8_t MIDI_Send (uint8_t* buffer, uint32_t length)
   * @param  length: Number of data received (in bytes)
   * @retval Result of the operation: USBD_OK if all operations are OK else USBD_FAIL
   */
-static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length) //TODO DEBUG This never gets called.
+static int8_t MIDI_Receive (uint8_t* buffer, uint32_t length)
 {
   uint8_t ret = USBD_OK;
   if (length < 4) {

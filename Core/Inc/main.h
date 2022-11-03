@@ -29,8 +29,10 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -54,6 +56,7 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel);
 void adsr_note_off(uint32_t ch, uint8_t note);
+void adsr_onoff(bool state);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/

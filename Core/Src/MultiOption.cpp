@@ -14,7 +14,6 @@ MultiOption::MultiOption(uint32_t _max)
 }
 
 MultiOption::~MultiOption() {
-	// TODO Auto-generated destructor stub
 }
 
 void MultiOption::trigger() {

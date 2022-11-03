@@ -42,7 +42,6 @@ ADSR::ADSR(uint32_t _ch
 }
 
 ADSR::~ADSR() {
-	// TODO Auto-generated destructor stub
 }
 
 void ADSR::setLED(LEDS led)
@@ -84,36 +83,50 @@ void ADSR::update_display()
 
 void ADSR::tick()
 {
-	//Read the AD Values
-	a = float(ad_a/10);
-	d = float(ad_d/10);
-	s = float(ad_s)/4096*100;
-	r = float(ad_r/10);
-
-	//Linear ADSR
-	t++; //Increase tick
 	float res;
-	if (t <= a) {
-		//Attack phase
-		res = vel/a*t;
-		setLED(LED_A);
-	} else if ((t-a) < d) {
-		//Decay phase
-		res = vel-((vel-(vel*float(s)/100))/d*(t-a));
-		setLED(LED_D);
-	} else if (output) {
-		//Sustain phase
-		res = vel*(float(s)/100);
-		setLED(LED_S);
-	} else if (relt < r) {
-		//Release phase
-		relt++;
-		uint32_t rt = r-relt;
-		res = (vel*float(s)/100)*(float(rt)/float(r));
-		setLED(LED_R);
+	if (onoff) {
+		//Read the AD Values
+		a = float(ad_a/10);
+		d = float(ad_d/10);
+		s = float(ad_s)/4096*100;
+		r = float(ad_r/10);
+
+		//Linear ADSR
+		t++; //Increase tick
+		if (t <= a) {
+			//Attack phase
+			res = vel/a*t;
+			if (res < rvalue) res=rvalue;
+			rvalue = res;
+			setLED(LED_A);
+			value = res;
+		} else if ((t-a) < d) {
+			//Decay phase
+			res = vel-((vel-(vel*float(s)/100))/d*(t-a));
+			value = res;
+			rvalue = res;
+			setLED(LED_D);
+		} else if (output) {
+			//Sustain phase
+			res = vel*(float(s)/100);
+			value = res;
+			rvalue = res;
+			setLED(LED_S);
+		} else if (relt < r) {
+			//Release phase
+			relt++;
+			uint32_t rt = r-relt;
+			res = value*(float(rt)/float(r));
+			rvalue = res;
+			setLED(LED_R);
+		} else {
+			res = 0;
+			value = 0;
+			rvalue = 0;
+			setLED(LED_OFF);
+		}
 	} else {
-		res = 0;
-		setLED(LED_OFF);
+		res = 0xff;
 	}
 
 	//Pick DAC
@@ -126,7 +139,6 @@ void ADSR::tick()
 	display.adsr_update_gain(ch, uint8_t(res));
 	//DAC_DATA_GPIO->ODR = 0x00FF;
 	//CS
-
 }
 
 void ADSR::note_on(uint8_t _note, uint8_t _vel)
@@ -138,10 +150,12 @@ void ADSR::note_on(uint8_t _note, uint8_t _vel)
 	tim.Init.Period = midi_to_cnt[_note];
 	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
     HAL_TIM_Base_Start_IT(&tim);
+    lastnote = _note;
 }
 
 void ADSR::note_off(uint8_t _note)
 {
+	if (_note != lastnote) return;
 	output = false;
 	relt = 0;
 	t = a+d+1; //So it jumps to release phase
@@ -150,7 +164,6 @@ void ADSR::note_off(uint8_t _note)
 void ADSR::error_handler() {
 	__disable_irq();
 	while(1) {
-		//TODO Just for debug
 	}
 }
 

@@ -199,7 +199,6 @@ void ADSRRange::handler()
 void ADSRRange::error_handler() {
 	__disable_irq();
 	while(1) {
-		//TODO Just for debug
 	}
 }
 
@@ -211,6 +210,11 @@ void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel)
 void adsr_note_off(uint32_t ch, uint8_t note)
 {
 	adsr[ch].note_off(note);
+}
+
+void adsr_onoff(bool state) { //TODO modify this to be btn action and get it on shift + ADSR Range button. 7-8? / channel
+	adsr[0].set_onoff(state);
+	adsr[1].set_onoff(state);
 }
 
 void adsr_tick_it_0(TIM_HandleTypeDef* tim)
@@ -282,13 +286,12 @@ int main(void)
   //Start AD
   HAL_ADC_Start_DMA(&hadc1, adc, 12);
 
+  adsr_onoff(true);
   while (1)
   {
 	  btn_handler.update();
 	  adsr[0].update_display();
 	  adsr[1].update_display();
-	  //wave_handler(0, BTN0_GPIO_Port, BTN0_Pin); //TODO: Cloud be a class?
-	  //wave_handler(1, BTN1_GPIO_Port, BTN1_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
