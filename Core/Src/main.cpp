@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ADSR.h"
+#include "ADSRRange.h"
 #include "defines.h"
 #include "Display.h"
 #include "MultiOption.h"
@@ -46,21 +47,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
-class ADSRRange : public MultiOption
-{
-private:
-	uint32_t ch;
-	TIM_HandleTypeDef &tim;
-	void error_handler();
-	const uint32_t ranges[8] = {0x000A, 0x000F, 0x00F0, 0x0F00, 0xF000, 0xF0F0, 0xFF00, 0xFFFF};
-public:
-	ADSRRange(uint32_t ch, TIM_HandleTypeDef &_tim);
-	~ADSRRange() {};
-	void handler();
-	uint32_t  get_ch() { return ch; }
-};
-
 ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
@@ -117,7 +103,7 @@ ADSR adsr[] = {
 
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
 MOWaves mowave0(0, dac_buffer[0], display), mowave1(1, dac_buffer[1], display);
-ADSRRange moadsr0(0, htim7), moadsr1(1, htim10);
+ADSRRange moadsr0(0, htim7, display), moadsr1(1, htim10, display);
 
 BTNHandler btn_handler(
 		 BTN0_GPIO_Port, BTN0_Pin
@@ -147,26 +133,6 @@ BTNHandler btn_handler(
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-ADSRRange::ADSRRange(uint32_t _ch, TIM_HandleTypeDef &_tim)
-:MultiOption(8), ch(_ch), tim(_tim)
-{
-}
-
-void ADSRRange::handler()
-{
-	display.set_wt_table(Display::Tables::ADSR_RANGE, get_ch(), get_act());
-	HAL_TIM_Base_Stop_IT(&tim);
-	tim.Init.Prescaler = ranges[get_act()];
-	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
-	HAL_TIM_Base_Start_IT(&tim);
-}
-
-void ADSRRange::error_handler() {
-	__disable_irq();
-	while(1) {
-	}
-}
-
 void adsr_note_on(uint32_t ch, uint8_t note, uint8_t vel)
 {
 	adsr[ch].note_on(note, vel);
