@@ -51,9 +51,9 @@
 
 class Display {
 public:
-	#define NUM_OF_TABLES 2
+	#define NUM_OF_TABLES 3
 	enum Tables {
-		WT, ADSR_RANGE
+		WT, ADSR_RANGE, EFFECTS
 	};
 
 private:

@@ -8,8 +8,8 @@
 #include "MOWaves.h"
 #include "Defines.h"
 
-MOWaves::MOWaves(uint32_t _ch, uint32_t *_dac_buffer, Display &_display)
- :MultiOption(NR_WAVES),ch(_ch),dac_buffer(_dac_buffer),display(_display)
+MOWaves::MOWaves(uint32_t _ch, uint32_t *_dac_buffer, Display &_display, Effects &_effects)
+ :MultiOption(NR_WAVES),ch(_ch),dac_buffer(_dac_buffer),display(_display), effects(_effects)
 {
 	copy_table();
 }
@@ -23,7 +23,7 @@ void MOWaves::handler()
 void MOWaves::copy_table()
 {
     for (int x = 0; x < NS; x++) {
- 	   dac_buffer[x] = Wave_LUT[get_act()][x];
+ 	   dac_buffer[x] = effects.get_modifier().modify(Wave_LUT[get_act()][x]);
     }
 }
 

@@ -11,6 +11,7 @@
 #include "MultiOption.h"
 #include "Display.h"
 #include "Defines.h"
+#include "Effects.h"
 
 class MOWaves : public MultiOption
 {
@@ -19,9 +20,10 @@ private:
 	void copy_table();
 	Display &display;
 	uint32_t *dac_buffer;
+	Effects &effects;
 
 public:
-	MOWaves(uint32_t _ch, uint32_t *_dac_buffer, Display &_display);
+	MOWaves(uint32_t _ch, uint32_t *_dac_buffer, Display &_display, Effects &_effects);
 	~MOWaves() {};
 	void handler();
 	uint32_t get_ch() { return ch; }

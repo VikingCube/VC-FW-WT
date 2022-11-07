@@ -28,7 +28,9 @@
 #include "Display.h"
 #include "MultiOption.h"
 #include "BTNHandler.h"
+#include "Effects.h"
 #include "MOWaves.h"
+
 
 /* USER CODE END Includes */
 
@@ -102,8 +104,10 @@ ADSR adsr[] = {
 }; //Will this call some copy constructor or so?
 
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
-MOWaves mowave0(0, dac_buffer[0], display), mowave1(1, dac_buffer[1], display);
+Effects moeff0(0, display), moeff1(1, display);
+MOWaves mowave0(0, dac_buffer[0], display, moeff0), mowave1(1, dac_buffer[1], display, moeff1);
 ADSRRange moadsr0(0, htim7, display), moadsr1(1, htim10, display);
+
 
 BTNHandler btn_handler(
 		 BTN0_GPIO_Port, BTN0_Pin
@@ -116,8 +120,8 @@ BTNHandler btn_handler(
 		,mowave1
 		,moadsr0
 		,moadsr1
-		,def4
-		,def5
+		,moeff0
+		,moeff1
 		,def6
 		,def7
 		,def8
