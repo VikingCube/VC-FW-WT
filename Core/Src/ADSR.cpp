@@ -133,10 +133,10 @@ void ADSR::tick()
 	if (ch == 1) HAL_GPIO_WritePin(DAC_AB_GPIO_Port, DAC_AB_Pin, GPIO_PIN_SET);
 	//Write Data
 	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_RESET);
-	DAC_DATA_GPIO->ODR = uint8_t(res);
+	//DAC_DATA_GPIO->ODR = uint8_t(res);
+	DAC_DATA_GPIO->ODR = 0x00FF;
 	HAL_GPIO_WritePin(DAC_CS_GPIO_Port, DAC_CS_Pin, GPIO_PIN_SET);
 	display.adsr_update_gain(ch, uint8_t(res));
-	//DAC_DATA_GPIO->ODR = 0x00FF;
 	//CS
 }
 
