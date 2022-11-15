@@ -85,21 +85,21 @@ Display display;
 ADSR adsr[] = {
 				ADSR(0
 					,htim2
-					,LED4_GPIO_Port ,LED4_Pin
-					,LED5_GPIO_Port ,LED5_Pin
-					,LED6_GPIO_Port ,LED6_Pin
-					,LED7_GPIO_Port ,LED7_Pin
+					,LED_AIN0_GPIO_Port ,LED_AIN0_Pin
+					,LED_AIN1_GPIO_Port ,LED_AIN1_Pin
+					,LED_AIN2_GPIO_Port ,LED_AIN2_Pin
+					,LED_AIN3_GPIO_Port ,LED_AIN3_Pin
 					,display
 					,adc[0],adc[1],adc[2],adc[3]
 					)
 			   ,ADSR(1
 					,htim4
-				    ,LED9_GPIO_Port  ,LED9_Pin
-					,LED10_GPIO_Port ,LED10_Pin
-					,LED11_GPIO_Port ,LED11_Pin
-					,LED12_GPIO_Port ,LED12_Pin
+					,LED_AIN4_GPIO_Port ,LED_AIN4_Pin
+					,LED_AIN5_GPIO_Port ,LED_AIN5_Pin
+					,LED_AIN6_GPIO_Port ,LED_AIN6_Pin
+					,LED_AIN7_GPIO_Port ,LED_AIN7_Pin
 					,display
-					,adc[4],adc[5],adc[6],adc[7]
+					,adc[7],adc[6],adc[5],adc[4]
 				    )
 }; //Will this call some copy constructor or so?
 
