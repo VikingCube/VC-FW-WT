@@ -29,7 +29,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 
-
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
@@ -90,14 +89,18 @@ void adsr_onoff(bool state);
 #define AIN2_GPIO_Port GPIOA
 #define AIN3_Pin GPIO_PIN_3
 #define AIN3_GPIO_Port GPIOA
-#define AIN4_Pin GPIO_PIN_6
-#define AIN4_GPIO_Port GPIOA
-#define AIN5_Pin GPIO_PIN_7
-#define AIN5_GPIO_Port GPIOA
-#define AIN6_Pin GPIO_PIN_4
-#define AIN6_GPIO_Port GPIOC
-#define AIN7_Pin GPIO_PIN_5
-#define AIN7_GPIO_Port GPIOC
+#define AIN7_Pin GPIO_PIN_6
+#define AIN7_GPIO_Port GPIOA
+#define AIN6_Pin GPIO_PIN_7
+#define AIN6_GPIO_Port GPIOA
+#define AIN5_Pin GPIO_PIN_4
+#define AIN5_GPIO_Port GPIOC
+#define AIN4_Pin GPIO_PIN_5
+#define AIN4_GPIO_Port GPIOC
+#define LED_AIN0_Pin GPIO_PIN_0
+#define LED_AIN0_GPIO_Port GPIOB
+#define LED_AIN1_Pin GPIO_PIN_1
+#define LED_AIN1_GPIO_Port GPIOB
 #define LED7_Pin GPIO_PIN_7
 #define LED7_GPIO_Port GPIOE
 #define LED8_Pin GPIO_PIN_8
@@ -116,6 +119,14 @@ void adsr_onoff(bool state);
 #define LED14_GPIO_Port GPIOE
 #define LED15_Pin GPIO_PIN_15
 #define LED15_GPIO_Port GPIOE
+#define LED_AIN7_Pin GPIO_PIN_10
+#define LED_AIN7_GPIO_Port GPIOB
+#define LED_AIN8_Pin GPIO_PIN_11
+#define LED_AIN8_GPIO_Port GPIOB
+#define LED_AIN9_Pin GPIO_PIN_12
+#define LED_AIN9_GPIO_Port GPIOB
+#define LED_AIN10_Pin GPIO_PIN_13
+#define LED_AIN10_GPIO_Port GPIOB
 #define LED16_Pin GPIO_PIN_14
 #define LED16_GPIO_Port GPIOB
 #define LED17_Pin GPIO_PIN_15
@@ -130,8 +141,8 @@ void adsr_onoff(bool state);
 #define BTN1_GPIO_Port GPIOC
 #define VBUS_FS_Pin GPIO_PIN_9
 #define VBUS_FS_GPIO_Port GPIOA
-#define OTG_FS_ID_Pin GPIO_PIN_10
-#define OTG_FS_ID_GPIO_Port GPIOA
+#define LED_AIN11_Pin GPIO_PIN_10
+#define LED_AIN11_GPIO_Port GPIOA
 #define OTG_FS_DM_Pin GPIO_PIN_11
 #define OTG_FS_DM_GPIO_Port GPIOA
 #define OTG_FS_DP_Pin GPIO_PIN_12
@@ -156,6 +167,16 @@ void adsr_onoff(bool state);
 #define DAC_D6_GPIO_Port GPIOD
 #define DAC_D7_Pin GPIO_PIN_7
 #define DAC_D7_GPIO_Port GPIOD
+#define LED_AIN2_Pin GPIO_PIN_5
+#define LED_AIN2_GPIO_Port GPIOB
+#define LED_AIN3_Pin GPIO_PIN_6
+#define LED_AIN3_GPIO_Port GPIOB
+#define LED_AIN4_Pin GPIO_PIN_7
+#define LED_AIN4_GPIO_Port GPIOB
+#define LED_AIN5_Pin GPIO_PIN_8
+#define LED_AIN5_GPIO_Port GPIOB
+#define LED_AIN6_Pin GPIO_PIN_9
+#define LED_AIN6_GPIO_Port GPIOB
 #define LED0_Pin GPIO_PIN_0
 #define LED0_GPIO_Port GPIOE
 #define LED1_Pin GPIO_PIN_1

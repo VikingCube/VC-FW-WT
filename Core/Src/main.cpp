@@ -725,7 +725,13 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOC, DAC_CS_Pin|DAC_AB_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, LED16_Pin|LED17_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LED_AIN0_Pin|LED_AIN1_Pin|LED_AIN7_Pin|LED_AIN8_Pin
+                          |LED_AIN9_Pin|LED_AIN10_Pin|LED16_Pin|LED17_Pin
+                          |LED_AIN2_Pin|LED_AIN3_Pin|LED_AIN4_Pin|LED_AIN5_Pin
+                          |LED_AIN6_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(LED_AIN11_GPIO_Port, LED_AIN11_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, DAC_D0_Pin|DAC_D1_Pin|DAC_D2_Pin|DAC_D3_Pin
@@ -751,8 +757,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LED16_Pin LED17_Pin */
-  GPIO_InitStruct.Pin = LED16_Pin|LED17_Pin;
+  /*Configure GPIO pins : LED_AIN0_Pin LED_AIN1_Pin LED_AIN7_Pin LED_AIN8_Pin
+                           LED_AIN9_Pin LED_AIN10_Pin LED16_Pin LED17_Pin
+                           LED_AIN2_Pin LED_AIN3_Pin LED_AIN4_Pin LED_AIN5_Pin
+                           LED_AIN6_Pin */
+  GPIO_InitStruct.Pin = LED_AIN0_Pin|LED_AIN1_Pin|LED_AIN7_Pin|LED_AIN8_Pin
+                          |LED_AIN9_Pin|LED_AIN10_Pin|LED16_Pin|LED17_Pin
+                          |LED_AIN2_Pin|LED_AIN3_Pin|LED_AIN4_Pin|LED_AIN5_Pin
+                          |LED_AIN6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -765,6 +777,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : LED_AIN11_Pin */
+  GPIO_InitStruct.Pin = LED_AIN11_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(LED_AIN11_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : DAC_D0_Pin DAC_D1_Pin DAC_D2_Pin DAC_D3_Pin
                            DAC_D4_Pin DAC_D5_Pin DAC_D6_Pin DAC_D7_Pin */
