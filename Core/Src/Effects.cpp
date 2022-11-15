@@ -8,7 +8,7 @@
 #include "Effects.h"
 
 Effects::Effects(uint32_t _ch, Display &_display)
-	:MultiOption(8)
+	:MultiOption(2)
 	,ch(_ch)
 	,display(_display)
 {
