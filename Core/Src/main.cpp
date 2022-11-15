@@ -209,9 +209,9 @@ int main(void)
   HAL_DAC_Start_DMA(&hdac, DAC_CHANNEL_2, (uint32_t*)dac_buffer[1], NS, DAC_ALIGN_12B_R);  //Start with Sin
   HAL_TIM_Base_Start_IT(&htim2); //DAC Ch1
   HAL_TIM_Base_Start(&htim4); //DAC Ch2
-  HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
-  HAL_TIM_Base_Start_IT(&htim10); //ADSR Ticks
-  HAL_TIM_Base_Start_IT(&htim6); //Display update
+  //HAL_TIM_Base_Start_IT(&htim7); //ADSR Ticks
+  //HAL_TIM_Base_Start_IT(&htim10); //ADSR Ticks
+  //HAL_TIM_Base_Start_IT(&htim6); //Display update
 
   /* USER CODE END 2 */
 
@@ -224,6 +224,142 @@ int main(void)
   adsr_onoff(true);
   while (1)
   {
+	  HAL_GPIO_WritePin(LED_AIN0_GPIO_Port, LED_AIN0_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN0_GPIO_Port, LED_AIN0_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN1_GPIO_Port, LED_AIN1_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN1_GPIO_Port, LED_AIN1_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN2_GPIO_Port, LED_AIN2_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN2_GPIO_Port, LED_AIN2_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN3_GPIO_Port, LED_AIN3_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN3_GPIO_Port, LED_AIN3_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN4_GPIO_Port, LED_AIN4_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN4_GPIO_Port, LED_AIN4_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN5_GPIO_Port, LED_AIN5_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN5_GPIO_Port, LED_AIN5_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN6_GPIO_Port, LED_AIN6_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN6_GPIO_Port, LED_AIN6_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN7_GPIO_Port, LED_AIN7_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN7_GPIO_Port, LED_AIN7_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN8_GPIO_Port, LED_AIN8_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN8_GPIO_Port, LED_AIN8_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN9_GPIO_Port, LED_AIN9_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN9_GPIO_Port, LED_AIN9_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN10_GPIO_Port, LED_AIN10_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN10_GPIO_Port, LED_AIN10_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED_AIN11_GPIO_Port, LED_AIN11_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED_AIN11_GPIO_Port, LED_AIN11_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED0_GPIO_Port, LED0_Pin, GPIO_PIN_RESET);
+
+	  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED4_GPIO_Port, LED4_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED5_GPIO_Port, LED5_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED6_GPIO_Port, LED6_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED7_GPIO_Port, LED7_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED8_GPIO_Port, LED8_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED9_GPIO_Port, LED9_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED9_GPIO_Port, LED9_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED10_GPIO_Port, LED10_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED10_GPIO_Port, LED10_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED11_GPIO_Port, LED11_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED11_GPIO_Port, LED11_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED12_GPIO_Port, LED12_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED12_GPIO_Port, LED12_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED13_GPIO_Port, LED13_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED13_GPIO_Port, LED13_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED14_GPIO_Port, LED14_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED14_GPIO_Port, LED14_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED15_GPIO_Port, LED15_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED15_GPIO_Port, LED15_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED16_GPIO_Port, LED16_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED16_GPIO_Port, LED16_Pin, GPIO_PIN_RESET);
+
+
+	  HAL_GPIO_WritePin(LED17_GPIO_Port, LED17_Pin, GPIO_PIN_SET);
+	  HAL_Delay(1000);
+	  HAL_GPIO_WritePin(LED17_GPIO_Port, LED17_Pin, GPIO_PIN_RESET);
+
 	  btn_handler.update();
 	  adsr[0].update_display();
 	  adsr[1].update_display();
