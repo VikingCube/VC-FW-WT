@@ -1,9 +1,10 @@
-# TODO
+# VikingCube WT Code
+Firmware for VikingCube WT using STM32F407VGT6
 
-## ADSR
-- Change the LEDs to the NEW ones after the V002 board is available.
-- Add option to change the ADSR Range
+# Legal
+You are free to download, build, modify VikingCube Midi with absolutely no fee and any kind of guarantee. 
+We believe in the mindset of opensource.
 
-## LED
-- Display class with delays possible
+We only ask you to show VikingCube text on the front of the modules. You shall add “Clone” / “Variant” to the name to distinguish from our original design.
+
 
