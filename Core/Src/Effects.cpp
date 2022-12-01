@@ -17,15 +17,12 @@ Effects::Effects(
 		   ,GPIO_TypeDef *_led_param_b_gpio
 		   ,uint16_t _led_param_b_pin
 		   )
-	:MultiOption(2)
+	:MultiOption(3) //TODO <<---- THIS IS THE ONE YOU SEARCH FOR WHEN YOU ADD NEW "EFFECTS"
 	,ch(_ch)
 	,display(_display)
-	,param_a(_param_a)
-	,led_param_a_gpio(_led_param_a_gpio)
-	,led_param_a_pin(_led_param_a_pin)
-	,param_b(_param_b)
-	,led_param_b_gpio(_led_param_b_gpio)
-	,led_param_b_pin(_led_param_b_pin)
+	,e_no(WaveModifier::PARAM_NO, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin) //TODO make a class for param
+	,e_dio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
+	,e_rdio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
 {
 
 }
@@ -33,7 +30,8 @@ Effects::Effects(
 void Effects::handler()
 {
 	display.set_wt_table(Display::Tables::EFFECTS, get_ch(), get_act());
-	setLEDs();
+	get_modifier().setLEDs();
+	get_modifier().reset();
 }
 
 void Effects::error_handler() {
@@ -42,10 +40,11 @@ void Effects::error_handler() {
 	}
 }
 
-void Effects::setLEDs() {
+void WaveModifier::setLEDs()
+{
 	HAL_GPIO_WritePin(led_param_a_gpio, led_param_a_pin, GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(led_param_b_gpio, led_param_b_pin, GPIO_PIN_RESET);
-	switch (get_modifier().get_lednum()) {
+	switch (param) {
 		case WaveModifier::PARAM_NO:
 			return; //They already off
 		case WaveModifier::PARAM_ONE:
@@ -60,6 +59,21 @@ void Effects::setLEDs() {
 	}
 }
 
+bool WaveModifier::uptodate()
+{
+	if (param == PARAM_NO && !need_update) return true;
+	if (need_update
+		|| (param_a+50 > param_a_old) || (param_a-50 < param_a_old)
+		|| (param_b+50 > param_b_old) || (param_b-50 < param_b_old)
+	) {
+		need_update = false;
+		param_a_old = param_a;
+		param_b_old = param_b;
+		return false;
+	}
+	return true;
+}
+
 WaveModifier& Effects::get_modifier()
 {
 //So we need this - as we don't have vectors, and we can't have an array of references,
@@ -70,13 +84,22 @@ WaveModifier& Effects::get_modifier()
 			return e_no;
 		case 1:
 			return e_dio;
+		case 2:
+			return e_rdio;
 	}
 	return e_no;
 }
 
 // Modifiers from here on
 uint32_t EDiode::modify(uint32_t i) {
-	if (i < 2048) { //Note 2047 is 0V output, because of the AC coupling on the output
+	if (i < param_a) { //Note 2047 is 0V output, because of the AC coupling on the output
+		return 0;
+	}
+	return i;
+}
+
+uint32_t ERDiode::modify(uint32_t i) {
+	if (i > param_a) { //Note 2047 is 0V output, because of the AC coupling on the output
 		return 0;
 	}
 	return i;

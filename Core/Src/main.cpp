@@ -236,6 +236,14 @@ int main(void)
 	  btn_handler.update();
 	  adsr[0].update_display();
 	  adsr[1].update_display();
+
+	  if (!moeff0.get_modifier().uptodate()) { //TODO Test the threshold somehow.
+		  mowave0.copy_table();
+	  }
+	  if (!moeff1.get_modifier().uptodate()) {
+		  mowave1.copy_table();
+	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

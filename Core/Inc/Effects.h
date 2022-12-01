@@ -15,48 +15,85 @@ class WaveModifier
 {
 public:
 	enum param_t { PARAM_NO, PARAM_ONE, PARAM_TWO };
+protected:
+	uint32_t &param_a;
+	uint32_t &param_b;
 private:
 	param_t param = PARAM_NO;
+
+
+	uint32_t param_a_old;
+	GPIO_TypeDef *led_param_a_gpio;
+	uint16_t led_param_a_pin;
+
+
+	uint32_t param_b_old;
+	GPIO_TypeDef *led_param_b_gpio;
+	uint16_t led_param_b_pin;
+
+	bool need_update = true;
+
+
 public:
-	WaveModifier(param_t _param):param(_param) {};
+	WaveModifier(
+			param_t _param
+		   ,uint32_t &_param_a
+		   ,GPIO_TypeDef *_led_param_a_gpio
+		   ,uint16_t _led_param_a_pin
+		   ,uint32_t &_param_b
+		   ,GPIO_TypeDef *_led_param_b_pgio
+		   ,uint16_t _led_param_b_pin
+    			):
+    		param(_param)
+		   ,param_a(_param_a)
+		   ,led_param_a_gpio(_led_param_a_gpio)
+		   ,led_param_a_pin(_led_param_a_pin)
+		   ,param_b(_param_b)
+		   ,led_param_b_gpio(_led_param_b_pgio)
+		   ,led_param_b_pin(_led_param_b_pin)
+			    {};
+
 	~WaveModifier() {};
 	virtual uint32_t modify(uint32_t i) = 0; //Must return  the value we will copy into the DAC buffer
-	param_t get_lednum() { return param; };
+	void setLEDs();
+	bool uptodate(); //Checks if params changed
+	void reset() { need_update = true; };
 };
 
 
 class NoEffect : public WaveModifier {
 public:
-	NoEffect():WaveModifier(WaveModifier::PARAM_NO) {};
+	using WaveModifier::WaveModifier;
 	uint32_t modify(uint32_t i) { return i; };
 };
 
 class EDiode : public WaveModifier {
 public:
-	EDiode():WaveModifier(WaveModifier::PARAM_ONE) {};
+	using WaveModifier::WaveModifier;
 	uint32_t modify(uint32_t i);
 };
+
+class ERDiode : public WaveModifier {
+public:
+	using WaveModifier::WaveModifier;
+	uint32_t modify(uint32_t i);
+};
+
+
 
 class Effects : public MultiOption
 {
 private:
 	uint32_t ch;
-//Effects
+
+	//Effects
 	NoEffect e_no;
 	EDiode   e_dio;
-	uint32_t &param_a;
-	GPIO_TypeDef *led_param_a_gpio;
-	uint16_t led_param_a_pin;
-	GPIO_TypeDef *led_param_b_gpio;
-	uint16_t led_param_b_pin;
-	uint32_t &param_b;
-
-
+	ERDiode  e_rdio;
 
 	Display &display;
 	uint32_t get_ch() { return ch; };
 	void error_handler();
-	void setLEDs();
 
 public:
 	Effects(

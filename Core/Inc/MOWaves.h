@@ -17,7 +17,6 @@ class MOWaves : public MultiOption
 {
 private:
 	uint32_t ch;
-	void copy_table();
 	Display &display;
 	uint32_t *dac_buffer;
 	Effects &effects;
@@ -27,6 +26,7 @@ public:
 	~MOWaves() {};
 	void handler();
 	uint32_t get_ch() { return ch; }
+	void copy_table();
 };
 
 #endif /* MOWAVES_H_ */

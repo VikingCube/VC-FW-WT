@@ -42,8 +42,7 @@ void Display::update()
 	leds_off();
 	state_tmr--;
 	if (state_tmr == 0) {
-		//state = TABLE; //Default state
-		state=UV; //TODO
+		state=UV;
 	}
 	switch (state) {
 		case TABLE:
