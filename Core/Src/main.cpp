@@ -104,7 +104,16 @@ ADSR adsr[] = {
 }; //Will this call some copy constructor or so?
 
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
-Effects moeff0(0, display), moeff1(1, display);
+Effects moeff0(0
+		      ,display
+			  ,adc[8], LED_AIN8_GPIO_Port, LED_AIN8_Pin
+			  ,adc[9], LED_AIN9_GPIO_Port, LED_AIN9_Pin
+		      )
+	   ,moeff1(1
+			  ,display
+			  ,adc[10], LED_AIN10_GPIO_Port, LED_AIN10_Pin
+			  ,adc[11], LED_AIN11_GPIO_Port, LED_AIN11_Pin
+	   	   	  );
 MOWaves mowave0(0, dac_buffer[0], display, moeff0), mowave1(1, dac_buffer[1], display, moeff1);
 ADSRRange moadsr0(0, htim7, display), moadsr1(1, htim10, display);
 

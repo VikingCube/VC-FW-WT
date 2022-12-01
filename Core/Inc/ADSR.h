@@ -20,19 +20,19 @@
 
 class ADSR {
 private:
-	bool     onoff  = 0; //1 on 0 off
-	uint32_t ch 	= 0;
+	bool     onoff     = 0; //1 on 0 off
+	uint32_t ch 	   = 0;
 	TIM_HandleTypeDef &tim;
-	uint32_t t 		= 0; //Number of ticks from the start
-	uint32_t relt 	= 0; //Number of ticks from the note off
-	float 	 a 		= 0;
-	float 	 d 		= 0;
-	uint32_t s 		= 0;
-	float 	 r 		= 0;
-	bool     output = false;
-	uint32_t vel    = 0;
-	float    value  = 0; //The last written value of the ADSR output used for release part
-	float    rvalue  = 0; //Release value, so if we re-trigger from the middle of the release we don't go to 0
+	uint32_t t 		   = 0; //Number of ticks from the start
+	uint32_t relt 	   = 0; //Number of ticks from the note off
+	float 	 a 		   = 0;
+	float 	 d 		   = 0;
+	uint32_t s 		   = 0;
+	float 	 r 		   = 0;
+	bool     output    = false;
+	uint32_t vel       = 0;
+	float    value     = 0; //The last written value of the ADSR output used for release part
+	float    rvalue    = 0; //Release value, so if we re-trigger from the middle of the release we don't go to 0
 	uint8_t  lastnote  = 0; //This is for a case when we trigger notes over and over and we don't want to go silent if the previous note is lifted
 
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;

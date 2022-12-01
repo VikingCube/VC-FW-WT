@@ -7,10 +7,25 @@
 
 #include "Effects.h"
 
-Effects::Effects(uint32_t _ch, Display &_display)
+Effects::Effects(
+			uint32_t _ch
+		   ,Display &_display
+		   ,uint32_t &_param_a
+		   ,GPIO_TypeDef *_led_param_a_gpio
+		   ,uint16_t _led_param_a_pin
+		   ,uint32_t &_param_b
+		   ,GPIO_TypeDef *_led_param_b_gpio
+		   ,uint16_t _led_param_b_pin
+		   )
 	:MultiOption(2)
 	,ch(_ch)
 	,display(_display)
+	,param_a(_param_a)
+	,led_param_a_gpio(_led_param_a_gpio)
+	,led_param_a_pin(_led_param_a_pin)
+	,param_b(_param_b)
+	,led_param_b_gpio(_led_param_b_gpio)
+	,led_param_b_pin(_led_param_b_pin)
 {
 
 }
@@ -18,11 +33,30 @@ Effects::Effects(uint32_t _ch, Display &_display)
 void Effects::handler()
 {
 	display.set_wt_table(Display::Tables::EFFECTS, get_ch(), get_act());
+	setLEDs();
 }
 
 void Effects::error_handler() {
 	__disable_irq();
 	while(1) {
+	}
+}
+
+void Effects::setLEDs() {
+	HAL_GPIO_WritePin(led_param_a_gpio, led_param_a_pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(led_param_b_gpio, led_param_b_pin, GPIO_PIN_RESET);
+	switch (get_modifier().get_lednum()) {
+		case WaveModifier::PARAM_NO:
+			return; //They already off
+		case WaveModifier::PARAM_ONE:
+			HAL_GPIO_WritePin(led_param_a_gpio, led_param_a_pin, GPIO_PIN_SET);
+			return;
+		case WaveModifier::PARAM_TWO:
+			HAL_GPIO_WritePin(led_param_a_gpio, led_param_a_pin, GPIO_PIN_SET);
+			HAL_GPIO_WritePin(led_param_b_gpio, led_param_b_pin, GPIO_PIN_SET);
+			return;
+		default:
+			return; //Shall not happen
 	}
 }
 
