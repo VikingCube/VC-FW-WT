@@ -79,6 +79,12 @@ public:
 	uint32_t modify(uint32_t i);
 };
 
+class WFolder : public WaveModifier {
+public:
+	using WaveModifier::WaveModifier;
+	uint32_t modify(uint32_t i);
+};
+
 
 
 class Effects : public MultiOption
@@ -90,6 +96,7 @@ private:
 	NoEffect e_no;
 	EDiode   e_dio;
 	ERDiode  e_rdio;
+	WFolder  e_wfold;
 
 	Display &display;
 	uint32_t get_ch() { return ch; };

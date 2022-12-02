@@ -17,12 +17,13 @@ Effects::Effects(
 		   ,GPIO_TypeDef *_led_param_b_gpio
 		   ,uint16_t _led_param_b_pin
 		   )
-	:MultiOption(3) //TODO <<---- THIS IS THE ONE YOU SEARCH FOR WHEN YOU ADD NEW "EFFECTS"
+	:MultiOption(4) //TODO <<---- THIS IS THE ONE YOU SEARCH FOR WHEN YOU ADD NEW "EFFECTS"
 	,ch(_ch)
 	,display(_display)
 	,e_no(WaveModifier::PARAM_NO, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin) //TODO make a class for param
 	,e_dio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
 	,e_rdio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
+	,e_wfold(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
 {
 
 }
@@ -86,6 +87,8 @@ WaveModifier& Effects::get_modifier()
 			return e_dio;
 		case 2:
 			return e_rdio;
+		case 3:
+			return e_wfold;
 	}
 	return e_no;
 }
@@ -104,3 +107,18 @@ uint32_t ERDiode::modify(uint32_t i) {
 	}
 	return i;
 }
+
+uint32_t WFolder::modify(uint32_t i) {
+	uint32_t x1 = 2047+(param_a>>1);
+	uint32_t x2 = 2047-(param_a>>1);
+
+	if (i > 2047) { //Positive
+		if ( i < x1 ) return i; //Below the limit
+		return x1-(i-x1); //Above the limit flip
+	}
+	//Negative
+	if ( i > param_a ) return i; //Above the limit
+	//Below the limit flip
+	return x2+(x2-i);
+}
+
