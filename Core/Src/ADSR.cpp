@@ -145,11 +145,8 @@ void ADSR::note_on(uint8_t _note, uint8_t _vel)
 	output = true;
 	t = 0;
 	vel = _vel*2;
-	HAL_TIM_Base_Stop_IT(&tim);
-	tim.Init.Period = midi_to_cnt[_note];
-	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
-    HAL_TIM_Base_Start_IT(&tim);
-    lastnote = _note;
+	set_freq(_note);
+	lastnote = _note;
 }
 
 void ADSR::note_off(uint8_t _note)
@@ -158,6 +155,19 @@ void ADSR::note_off(uint8_t _note)
 	output = false;
 	relt = 0;
 	t = a+d+1; //So it jumps to release phase
+}
+
+void ADSR::set_freq_mod(int32_t x) {
+	freq_mod = x;
+	set_freq(lastnote);
+}
+
+void ADSR::set_freq(uint8_t note)
+{
+	HAL_TIM_Base_Stop_IT(&tim);
+	tim.Init.Period = midi_to_cnt[note] + freq_mod;
+	if (HAL_TIM_Base_Init(&tim) != HAL_OK) { error_handler(); }
+    HAL_TIM_Base_Start_IT(&tim);
 }
 
 void ADSR::error_handler() {

@@ -34,6 +34,7 @@ private:
 	float    value     = 0; //The last written value of the ADSR output used for release part
 	float    rvalue    = 0; //Release value, so if we re-trigger from the middle of the release we don't go to 0
 	uint8_t  lastnote  = 0; //This is for a case when we trigger notes over and over and we don't want to go silent if the previous note is lifted
+	int32_t  freq_mod  = 0; //Set by the FM effect
 
 	GPIO_TypeDef *led_a_gpio,*led_d_gpio,*led_s_gpio,*led_r_gpio;
 	uint16_t	  led_a_pin,led_d_pin,led_s_pin,led_r_pin;
@@ -43,6 +44,7 @@ private:
 	enum LEDS { LED_OFF, LED_A, LED_D, LED_S, LED_R };
 
 	void setLED(LEDS led);
+	void set_freq(uint8_t note);
 	void error_handler();
 
 public:
@@ -68,6 +70,7 @@ public:
 	void note_off(uint8_t _note);
 	void update_display();
 	void set_onoff(bool state) { onoff = state; }
+	void set_freq_mod(int32_t x);
 };
 
 #endif /* INC_ADSR_H_ */
