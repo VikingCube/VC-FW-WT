@@ -6,10 +6,12 @@
  */
 
 #include "Effects.h"
+#include "Utility.h"
 
 Effects::Effects(
 			uint32_t _ch
 		   ,Display &_display
+		   ,ADSR &_adsr
 		   ,uint32_t &_param_a
 		   ,GPIO_TypeDef *_led_param_a_gpio
 		   ,uint16_t _led_param_a_pin
@@ -17,13 +19,14 @@ Effects::Effects(
 		   ,GPIO_TypeDef *_led_param_b_gpio
 		   ,uint16_t _led_param_b_pin
 		   )
-	:MultiOption(4) //TODO <<---- THIS IS THE ONE YOU SEARCH FOR WHEN YOU ADD NEW "EFFECTS"
+	:MultiOption(5) //TODO <<---- THIS IS THE ONE YOU SEARCH FOR WHEN YOU ADD NEW "EFFECTS"
 	,ch(_ch)
 	,display(_display)
 	,e_no(WaveModifier::PARAM_NO, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin) //TODO make a class for param
 	,e_dio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
 	,e_rdio(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
 	,e_wfold(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin)
+	,e_fmod(WaveModifier::PARAM_ONE, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_gpio, _led_param_b_pin, _adsr)
 {
 
 }
@@ -89,6 +92,8 @@ WaveModifier& Effects::get_modifier()
 			return e_rdio;
 		case 3:
 			return e_wfold;
+		case 4:
+			return e_fmod;
 	}
 	return e_no;
 }
@@ -122,3 +127,18 @@ uint32_t WFolder::modify(uint32_t i) {
 	return x2+(x2-i);
 }
 
+bool FMod::uptodate()
+{
+	if (param == PARAM_NO && !need_update) return true;
+	if (need_update
+		|| (param_a+50 > param_a_old) || (param_a-50 < param_a_old)
+		|| (param_b+50 > param_b_old) || (param_b-50 < param_b_old)
+	) {
+		need_update = false;
+		param_a_old = param_a;
+		param_b_old = param_b;
+		adsr.set_freq_mod(Utility::p_m_param(param_a));
+		return false;
+	}
+	return false; //This never needs to update the wave
+}

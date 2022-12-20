@@ -9,6 +9,7 @@
 #define EFFECTS_H_
 #include "MultiOption.h"
 #include "Display.h"
+#include "adsr.h"
 #include "stm32f4xx_hal.h"
 
 class WaveModifier
@@ -18,20 +19,20 @@ public:
 protected:
 	uint32_t &param_a;
 	uint32_t &param_b;
-private:
+	bool need_update = true;
+	uint32_t param_a_old;
+	uint32_t param_b_old;
 	param_t param = PARAM_NO;
 
-
-	uint32_t param_a_old;
+private:
 	GPIO_TypeDef *led_param_a_gpio;
 	uint16_t led_param_a_pin;
 
 
-	uint32_t param_b_old;
 	GPIO_TypeDef *led_param_b_gpio;
 	uint16_t led_param_b_pin;
 
-	bool need_update = true;
+
 
 
 public:
@@ -56,7 +57,7 @@ public:
 	~WaveModifier() {};
 	virtual uint32_t modify(uint32_t i) = 0; //Must return  the value we will copy into the DAC buffer
 	void setLEDs();
-	bool uptodate(); //Checks if params changed
+	virtual bool uptodate(); //Checks if params changed
 	void reset() { need_update = true; };
 };
 
@@ -85,6 +86,26 @@ public:
 	uint32_t modify(uint32_t i);
 };
 
+class FMod : public WaveModifier {
+private:
+	ADSR &adsr;
+public:
+	FMod(
+			param_t _param
+		   ,uint32_t &_param_a
+		   ,GPIO_TypeDef *_led_param_a_gpio
+		   ,uint16_t _led_param_a_pin
+		   ,uint32_t &_param_b
+		   ,GPIO_TypeDef *_led_param_b_pgio
+		   ,uint16_t _led_param_b_pin
+		   ,ADSR &_adsr
+    			): WaveModifier(_param, _param_a, _led_param_a_gpio, _led_param_a_pin, _param_b, _led_param_b_pgio, _led_param_b_pin)
+		   	   	  ,adsr(_adsr)
+			    {};
+	uint32_t modify(uint32_t i) { return i; };
+	bool uptodate(); //Checks if params changed
+};
+
 
 
 class Effects : public MultiOption
@@ -97,6 +118,7 @@ private:
 	EDiode   e_dio;
 	ERDiode  e_rdio;
 	WFolder  e_wfold;
+	FMod     e_fmod;
 
 	Display &display;
 	uint32_t get_ch() { return ch; };
@@ -106,6 +128,7 @@ public:
 	Effects(
 			uint32_t ch
 		   ,Display &_display
+		   ,ADSR &_adsr
 		   ,uint32_t &_param_a
 		   ,GPIO_TypeDef *_led_param_a_gpio
 		   ,uint16_t _led_param_a_pin

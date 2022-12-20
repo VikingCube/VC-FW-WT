@@ -106,11 +106,13 @@ ADSR adsr[] = {
 DefBTNAction def2,def3,def4,def5,def6,def7,def8,def9,def10,def11,def12,def13,def14,def15;
 Effects moeff0(0
 		      ,display
+			  ,adsr[0]
 			  ,adc[8], LED_AIN8_GPIO_Port, LED_AIN8_Pin
 			  ,adc[9], LED_AIN9_GPIO_Port, LED_AIN9_Pin
 		      )
 	   ,moeff1(1
 			  ,display
+			  ,adsr[1]
 			  ,adc[10], LED_AIN10_GPIO_Port, LED_AIN10_Pin
 			  ,adc[11], LED_AIN11_GPIO_Port, LED_AIN11_Pin
 	   	   	  );
